@@ -21,6 +21,7 @@ _.fnox-env = { tools = true, profile = "dev" }
 
 [tools]
 # hk: prebuilt releases omit macOS x86_64 — `brew install hk` or build from source.
+node = "22"
 fnox = "latest"
 "github:buildkite/cli" = "latest"
 dprint = "0.50.2"
