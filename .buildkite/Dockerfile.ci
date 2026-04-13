@@ -18,6 +18,3 @@ COPY client/mise.lock client/mise.lock
 RUN mise install --yes
 RUN cd backend && mise install --yes
 RUN cd client && mise install --yes
-
-COPY . .
-RUN cd backend && mise x -- uv sync --all-groups
