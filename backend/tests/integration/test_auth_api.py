@@ -22,6 +22,27 @@ async def test_login_short_wrong_password_returns_401_not_422(client: AsyncClien
 
 
 @pytest.mark.asyncio()
+async def test_login_wrong_password_returns_401(client: AsyncClient) -> None:
+    await client.post("/api/auth/signup", json={"email": "pw@test.com", "password": "correct_pw12"})
+    resp = await client.post(
+        "/api/auth/login",
+        json={"email": "pw@test.com", "password": "wrong_pw99"},
+    )
+    assert resp.status_code == 401
+    assert resp.json().get("detail") == "Invalid credentials"
+
+
+@pytest.mark.asyncio()
+async def test_login_nonexistent_user_returns_401(client: AsyncClient) -> None:
+    resp = await client.post(
+        "/api/auth/login",
+        json={"email": "ghost@test.com", "password": "doesntmatter1"},
+    )
+    assert resp.status_code == 401
+    assert resp.json().get("detail") == "Invalid credentials"
+
+
+@pytest.mark.asyncio()
 async def test_signup_login(client: AsyncClient) -> None:
     body = {"email": "a@example.com", "password": "secret123"}
     s = await client.post("/api/auth/signup", json=body)
