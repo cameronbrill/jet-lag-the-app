@@ -3,18 +3,38 @@ steps:
     steps:
       - label: "Format"
         command: "mise run :format -- --check"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
       - label: "Lint Backend"
         command: "mise run //backend:lint"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
       - label: "Lint Client"
         command: "mise run //client:lint"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
       - label: "Typecheck Backend"
         command: "mise run //backend:typecheck"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
       - label: "Lint Markdown"
         command: "mise run :lint"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
   - group: "Test"
     depends_on: "Quality"
@@ -23,9 +43,17 @@ steps:
         command: "mise run //backend:test -- --ci"
         artifact_paths:
           - "backend/results/*.xml"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
       - label: "Test Client"
         command: "mise run //client:test"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
   - group: "Build"
     depends_on: "Test"
@@ -35,6 +63,14 @@ steps:
 
       - label: "Build Android"
         command: "mise run //client:build android"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
 
       - label: "Build Desktop"
         command: "mise run //client:build desktop"
+        plugins:
+          - docker-compose#v5.8.0:
+              run: app
+              config: .buildkite/docker-compose.ci.yml
