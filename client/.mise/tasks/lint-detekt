@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Static analysis with detekt"
-set -euo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-cd "$ROOT"
-exec mise x -- ./gradlew :feature-game:detekt

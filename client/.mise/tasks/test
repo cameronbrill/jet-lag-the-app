@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-#MISE description="Run KMP tests (all targets if Xcode is available, else desktop JVM only)"
+#MISE description="Run KMP tests (--all to force allTests even without Xcode)"
+#USAGE flag "--all" help="Force allTests regardless of platform"
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
-if [[ "$(uname -s)" == Darwin ]] && xcrun xcodebuild -version >/dev/null 2>&1; then
+
+if [[ "${usage_all:-false}" == "true" ]]; then
+	exec mise x -- ./gradlew allTests
+elif [[ "$(uname -s)" == Darwin ]] && xcrun xcodebuild -version >/dev/null 2>&1; then
 	exec mise x -- ./gradlew allTests
 else
 	exec mise x -- ./gradlew desktopTest

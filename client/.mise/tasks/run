@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#MISE description="Run client app locally"
+#USAGE arg "<target>" help="Run target" {
+#USAGE   choices "desktop"
+#USAGE }
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+
+case "${usage_target}" in
+	desktop)
+		exec mise x -- ./gradlew :app:desktopApp:run
+		;;
+esac
