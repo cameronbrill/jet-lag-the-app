@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 from jetlag.api.deps import DbConn
 from jetlag.db.generated.shortlinks import AsyncQuerier as ShortlinkQuerier
@@ -16,7 +16,7 @@ _ALLOWED_SHORTLINK_SCHEMES = frozenset({"https", "myapp"})
 
 
 class RegisterShortlinkBody(BaseModel):
-    slug: str
+    slug: str = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_-]+$")
     target_url: str
 
     @field_validator("target_url")
