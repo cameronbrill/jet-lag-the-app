@@ -20,10 +20,10 @@ ENV = "development"
 _.fnox-env = { tools = true, profile = "dev" }
 
 [tools]
-# hk: prebuilt releases omit macOS x86_64 — `brew install hk` or build from source.
+# hk: `brew install hk` (no mise backend for macOS x86_64)
+# bk: `mise use github:buildkite/cli` (opt-in, hits GitHub rate limits without GITHUB_TOKEN)
 node = "22"
 fnox = "latest"
-"github:buildkite/cli" = "latest"
 dprint = "0.50.2"
 "npm:markdownlint-cli" = "latest"
 "aqua:pinterest/ktlint" = "1.8.0"

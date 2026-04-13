@@ -161,45 +161,6 @@ checksum = "sha256:6037b03651c67af5b00992cc73d0a4283b746effe7b5079ee3f1327cd72bc
 url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763121"
 
-[[tools."github:buildkite/cli"]]
-version = "3.35.1"
-backend = "github:buildkite/cli"
-
-[tools."github:buildkite/cli"."platforms.linux-arm64"]
-checksum = "sha256:9b212223d181629093cece13206ce992ae2b2b939b6ac967e5dfee0c3b077ab3"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042288"
-
-[tools."github:buildkite/cli"."platforms.linux-arm64-musl"]
-checksum = "sha256:9b212223d181629093cece13206ce992ae2b2b939b6ac967e5dfee0c3b077ab3"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042288"
-
-[tools."github:buildkite/cli"."platforms.linux-x64"]
-checksum = "sha256:121c4a62c14ec53f48c66936c43f6ea939fae2d86817b07d822aa553fa440610"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042290"
-
-[tools."github:buildkite/cli"."platforms.linux-x64-musl"]
-checksum = "sha256:121c4a62c14ec53f48c66936c43f6ea939fae2d86817b07d822aa553fa440610"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042290"
-
-[tools."github:buildkite/cli"."platforms.macos-arm64"]
-checksum = "sha256:eff4667025493402fe5168b0456e6b8ac5b05852f38709104a979a67c715208f"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_macOS_arm64.zip"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042284"
-
-[tools."github:buildkite/cli"."platforms.macos-x64"]
-checksum = "sha256:2c0cfa9607c5baea387ed12bda8b1e88bf21db104e2c4b628fa02fc56cf531b1"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_macOS_amd64.zip"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042285"
-
-[tools."github:buildkite/cli"."platforms.windows-x64"]
-checksum = "sha256:5812d8d9b52d03b0d25c31be52f04ed7ff37a4ed46f2622e5dacac3450945c44"
-url = "https://github.com/buildkite/cli/releases/download/v3.35.1/bk_3.35.1_windows_amd64.zip"
-url_api = "https://api.github.com/repos/buildkite/cli/releases/assets/395042348"
-
 [[tools.node]]
 version = "22.22.2"
 backend = "core:node"
