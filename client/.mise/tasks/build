@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="Build client for a target platform"
+#USAGE arg "<target>" help="Build target" {
+#USAGE   choices "android" "desktop"
+#USAGE }
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+
+case "${usage_target}" in
+	android)
+		exec mise x -- ./gradlew :app:androidApp:assembleRelease
+		;;
+	desktop)
+		exec mise x -- ./gradlew :app:desktopApp:packageDistributionForCurrentOS
+		;;
+esac
