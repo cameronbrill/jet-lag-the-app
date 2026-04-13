@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Run hk check (all steps delegate to mise monorepo tasks)"
-set -euo pipefail
-hk check --all
