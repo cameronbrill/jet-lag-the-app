@@ -1,20 +1,33 @@
 from __future__ import annotations
 
 import html
+from urllib.parse import urlparse
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from jetlag.api.deps import DbConn
 from jetlag.db.generated.shortlinks import AsyncQuerier as ShortlinkQuerier
 
 router = APIRouter(prefix="/shortlinks", tags=["shortlinks"])
 
+_ALLOWED_SHORTLINK_SCHEMES = frozenset({"https", "myapp"})
+
 
 class RegisterShortlinkBody(BaseModel):
     slug: str
     target_url: str
+
+    @field_validator("target_url")
+    @classmethod
+    def target_url_allowed_scheme(cls, value: str) -> str:
+        parsed = urlparse(value)
+        scheme = (parsed.scheme or "").lower()
+        if scheme not in _ALLOWED_SHORTLINK_SCHEMES:
+            msg = "target_url must use https or myapp scheme"
+            raise ValueError(msg)
+        return value
 
 
 @router.post("")
