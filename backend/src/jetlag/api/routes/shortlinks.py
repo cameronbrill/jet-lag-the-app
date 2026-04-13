@@ -65,6 +65,7 @@ async def register_shortlink(
     try:
         await q.insert_shortlink(slug=body.slug, target_url=body.target_url, created_by_email=user_email)
     except IntegrityError:
+        # Concurrent insert won the race; rollback and resolve by owner (same user → update; other → 409).
         await conn.rollback()
         row = await q.get_shortlink(slug=body.slug)
         if row is None:

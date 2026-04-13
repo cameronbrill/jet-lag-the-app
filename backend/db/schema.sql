@@ -71,6 +71,6 @@ CREATE INDEX idx_active_curses_game_id ON active_curses(game_id);
 CREATE TABLE shortlinks (
   slug TEXT PRIMARY KEY,
   target_url TEXT NOT NULL,
-  created_by_email TEXT NOT NULL,
+  created_by_email TEXT NOT NULL REFERENCES users (email) ON DELETE CASCADE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

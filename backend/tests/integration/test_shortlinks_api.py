@@ -71,11 +71,12 @@ async def test_shortlink_other_user_cannot_steal_slug(client: AsyncClient) -> No
 @pytest.mark.asyncio()
 async def test_shortlink_html_escapes_url(client: AsyncClient) -> None:
     headers = await _auth_headers(client, "html-esc@test.com", "password123")
-    await client.post(
+    reg = await client.post(
         "/api/shortlinks",
         json={"slug": "xss", "target_url": "https://example.com/?x=1&y=2&z=3"},
         headers=headers,
     )
+    assert reg.status_code == 200, reg.text
     resp = await client.get("/api/shortlinks/xss/html")
     assert resp.status_code == 200
     assert "&amp;" in resp.text
