@@ -1,7 +1,9 @@
 # Secrets and configuration are managed with fnox (https://fnox.jdx.dev/guide/what-is-fnox.html).
-# Install `fnox` and run `fnox init` to replace this stub with a real project file.
+# Run `fnox init` to replace this stub with a real project file.
 # Never commit plaintext secrets; encrypt with age or a supported provider.
 
-[meta]
-name = "jet-lag-the-app"
-note = "Replace this file with output from `fnox init` before using encrypted secrets."
+[profiles.dev]
+
+[profiles.staging]
+
+[profiles.production]

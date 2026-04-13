@@ -4,9 +4,104 @@
 version = "1.8.0"
 backend = "aqua:pinterest/ktlint"
 
+[tools."aqua:pinterest/ktlint"."platforms.linux-arm64"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
+[tools."aqua:pinterest/ktlint"."platforms.linux-arm64-musl"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
+[tools."aqua:pinterest/ktlint"."platforms.linux-x64"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
+[tools."aqua:pinterest/ktlint"."platforms.linux-x64-musl"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
+[tools."aqua:pinterest/ktlint"."platforms.macos-arm64"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
+[tools."aqua:pinterest/ktlint"."platforms.macos-x64"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
+[tools."aqua:pinterest/ktlint"."platforms.windows-x64"]
+checksum = "sha256:3722801dd119b96a2fbeda0b9d66f173994f249998c87bcf2274b51977aa8f77"
+url = "https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint-1.8.0.zip"
+
 [[tools.dprint]]
 version = "0.50.2"
 backend = "aqua:dprint/dprint"
+
+[tools.dprint."platforms.linux-arm64"]
+checksum = "sha256:a4982964a68aefc2720b4c79c51a57e49b32f8944c1641fd9e714503fcf01847"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-aarch64-unknown-linux-musl.zip"
+
+[tools.dprint."platforms.linux-arm64-musl"]
+checksum = "sha256:a4982964a68aefc2720b4c79c51a57e49b32f8944c1641fd9e714503fcf01847"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-aarch64-unknown-linux-musl.zip"
+
+[tools.dprint."platforms.linux-x64"]
+checksum = "sha256:4b0e7911262049ccb8e1ac5968bf7a66dc490968fe1552a123bb2d6dadf2ad95"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-x86_64-unknown-linux-musl.zip"
+
+[tools.dprint."platforms.linux-x64-musl"]
+checksum = "sha256:4b0e7911262049ccb8e1ac5968bf7a66dc490968fe1552a123bb2d6dadf2ad95"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-x86_64-unknown-linux-musl.zip"
+
+[tools.dprint."platforms.macos-arm64"]
+checksum = "sha256:f534bcc054947ab2a42c069b5f6027914d252729bd15c1109812313b35a662a5"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-aarch64-apple-darwin.zip"
+
+[tools.dprint."platforms.macos-x64"]
+checksum = "sha256:61becbf8d1b16540e364a4f00be704266ae322ee0ff3ba66a4a21033f66a8d55"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-x86_64-apple-darwin.zip"
+
+[tools.dprint."platforms.windows-x64"]
+checksum = "sha256:2dbdb57106818acd930a00bc0c2c33370bd4c7265f78a6cda000e3621f2d3c1c"
+url = "https://github.com/dprint/dprint/releases/download/0.50.2/dprint-x86_64-pc-windows-msvc.zip"
+
+[[tools.fnox]]
+version = "1.20.0"
+backend = "github:jdx/fnox"
+
+[tools.fnox."platforms.linux-arm64"]
+checksum = "sha256:44b731e79c349c2b6ff0d76c9791b81cef5d0ab3a7cddb1512903654075a4047"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763119"
+
+[tools.fnox."platforms.linux-arm64-musl"]
+checksum = "sha256:44b731e79c349c2b6ff0d76c9791b81cef5d0ab3a7cddb1512903654075a4047"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763119"
+
+[tools.fnox."platforms.linux-x64"]
+checksum = "sha256:e5107da4ded29f88be6e52430849a361384e89499f678bac64ba40dc60bbc985"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763132"
+
+[tools.fnox."platforms.linux-x64-musl"]
+checksum = "sha256:e5107da4ded29f88be6e52430849a361384e89499f678bac64ba40dc60bbc985"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763132"
+
+[tools.fnox."platforms.macos-arm64"]
+checksum = "sha256:84895475983887137ad3cfd7c2018dad30a2024178497ed8aab2ac7ceae662ff"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763122"
+
+[tools.fnox."platforms.macos-x64"]
+checksum = "sha256:7096fbe5d9dc95cf8819d8b269f454e68a6b2d8ff875d14cfb2cc363be90591e"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763120"
+
+[tools.fnox."platforms.windows-x64"]
+checksum = "sha256:6037b03651c67af5b00992cc73d0a4283b746effe7b5079ee3f1327cd72bc97c"
+url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763121"
 
 [[tools."npm:markdownlint-cli"]]
 version = "0.48.0"
