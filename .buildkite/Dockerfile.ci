@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN curl -sSf https://mise.jdx.dev/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
+ENV MISE_EXPERIMENTAL=1
 
 WORKDIR /workdir
 COPY mise.toml mise.lock ./
@@ -13,6 +14,10 @@ COPY backend/mise.toml backend/mise.toml
 COPY backend/mise.lock backend/mise.lock
 COPY client/mise.toml client/mise.toml
 COPY client/mise.lock client/mise.lock
+
 RUN mise install --yes
+RUN cd backend && mise install --yes
+RUN cd client && mise install --yes
 
 COPY . .
+RUN cd backend && mise x -- uv sync --all-groups
