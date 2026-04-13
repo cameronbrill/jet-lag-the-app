@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
-#MISE description="Run all Kotlin linters"
-#MISE depends=["lint-ktlint", "lint-detekt"]
+#MISE description="Lint Kotlin (--fix to auto-format, --ktlint or --detekt for one linter)"
+#USAGE flag "--fix" help="Auto-fix with ktlint format"
+#USAGE flag "--ktlint" help="Run only ktlint"
+#USAGE flag "--detekt" help="Run only detekt"
 set -euo pipefail
-echo "Kotlin linting complete."
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+
+run_ktlint() {
+	if [[ "${usage_fix:-false}" == "true" ]]; then
+		ktlint -F
+	else
+		ktlint
+	fi
+}
+
+run_detekt() {
+	mise x -- ./gradlew :feature-game:detekt
+}
+
+if [[ "${usage_ktlint:-false}" == "true" ]]; then
+	run_ktlint
+elif [[ "${usage_detekt:-false}" == "true" ]]; then
+	run_detekt
+else
+	run_ktlint
+	run_detekt
+fi

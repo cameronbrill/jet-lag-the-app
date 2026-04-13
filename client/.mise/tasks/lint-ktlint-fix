@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Format Kotlin with ktlint"
-set -euo pipefail
-ktlint -F

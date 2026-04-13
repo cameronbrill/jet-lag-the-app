@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Lint Kotlin with ktlint"
-set -euo pipefail
-ktlint
