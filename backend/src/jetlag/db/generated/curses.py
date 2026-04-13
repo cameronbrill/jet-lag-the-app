@@ -2,14 +2,15 @@
 # versions:
 #   sqlc v1.30.0
 # source: curses.sql
-from collections.abc import AsyncIterator
+import pydantic
+from typing import AsyncIterator, Optional
 import uuid
 
-import pydantic
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 from jetlag.db.generated import models
+
 
 CREATE_ACTIVE_CURSE = """-- name: create_active_curse \\:one
 INSERT INTO active_curses (game_id, curse_id, target_player_id, remaining_rounds, block_kind)
@@ -23,7 +24,7 @@ class CreateActiveCurseParams(pydantic.BaseModel):
     curse_id: uuid.UUID
     target_player_id: uuid.UUID
     remaining_rounds: int
-    block_kind: models.CurseBlockKind | None
+    block_kind: Optional[models.CurseBlockKind]
 
 
 CREATE_CURSE_DEFINITION = """-- name: create_curse_definition \\:one
@@ -38,7 +39,7 @@ class CreateCurseDefinitionParams(pydantic.BaseModel):
     duration_rounds: int
     blocks_transit: bool
     blocks_questions: bool
-    video_instruction_url: str | None
+    video_instruction_url: Optional[str]
 
 
 DECREMENT_ACTIVE_CURSES = """-- name: decrement_active_curses \\:exec
@@ -70,19 +71,14 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_active_curse(self, arg: CreateActiveCurseParams) -> models.ActiveCurse | None:
-        row = (
-            await self._conn.execute(
-                sqlalchemy.text(CREATE_ACTIVE_CURSE),
-                {
-                    "p1": arg.game_id,
-                    "p2": arg.curse_id,
-                    "p3": arg.target_player_id,
-                    "p4": arg.remaining_rounds,
-                    "p5": arg.block_kind,
-                },
-            )
-        ).first()
+    async def create_active_curse(self, arg: CreateActiveCurseParams) -> Optional[models.ActiveCurse]:
+        row = (await self._conn.execute(sqlalchemy.text(CREATE_ACTIVE_CURSE), {
+            "p1": arg.game_id,
+            "p2": arg.curse_id,
+            "p3": arg.target_player_id,
+            "p4": arg.remaining_rounds,
+            "p5": arg.block_kind,
+        })).first()
         if row is None:
             return None
         return models.ActiveCurse(
@@ -95,19 +91,14 @@ class AsyncQuerier:
             created_at=row[6],
         )
 
-    async def create_curse_definition(self, arg: CreateCurseDefinitionParams) -> models.CurseDefinition | None:
-        row = (
-            await self._conn.execute(
-                sqlalchemy.text(CREATE_CURSE_DEFINITION),
-                {
-                    "p1": arg.name,
-                    "p2": arg.duration_rounds,
-                    "p3": arg.blocks_transit,
-                    "p4": arg.blocks_questions,
-                    "p5": arg.video_instruction_url,
-                },
-            )
-        ).first()
+    async def create_curse_definition(self, arg: CreateCurseDefinitionParams) -> Optional[models.CurseDefinition]:
+        row = (await self._conn.execute(sqlalchemy.text(CREATE_CURSE_DEFINITION), {
+            "p1": arg.name,
+            "p2": arg.duration_rounds,
+            "p3": arg.blocks_transit,
+            "p4": arg.blocks_questions,
+            "p5": arg.video_instruction_url,
+        })).first()
         if row is None:
             return None
         return models.CurseDefinition(
@@ -126,7 +117,7 @@ class AsyncQuerier:
     async def delete_expired_curses(self, *, game_id: uuid.UUID) -> None:
         await self._conn.execute(sqlalchemy.text(DELETE_EXPIRED_CURSES), {"p1": game_id})
 
-    async def get_curse_definition(self, *, id: uuid.UUID) -> models.CurseDefinition | None:
+    async def get_curse_definition(self, *, id: uuid.UUID) -> Optional[models.CurseDefinition]:
         row = (await self._conn.execute(sqlalchemy.text(GET_CURSE_DEFINITION), {"p1": id})).first()
         if row is None:
             return None

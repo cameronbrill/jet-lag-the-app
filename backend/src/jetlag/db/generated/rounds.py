@@ -2,13 +2,14 @@
 # versions:
 #   sqlc v1.30.0
 # source: rounds.sql
-from collections.abc import AsyncIterator
+from typing import AsyncIterator, Optional
 import uuid
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 from jetlag.db.generated import models
+
 
 CREATE_ROUND = """-- name: create_round \\:one
 INSERT INTO rounds (game_id, index, hider_player_id, phase)
@@ -41,20 +42,13 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_round(
-        self, *, game_id: uuid.UUID, index: int, hider_player_id: uuid.UUID, phase: models.RoundPhase
-    ) -> models.Round | None:
-        row = (
-            await self._conn.execute(
-                sqlalchemy.text(CREATE_ROUND),
-                {
-                    "p1": game_id,
-                    "p2": index,
-                    "p3": hider_player_id,
-                    "p4": phase,
-                },
-            )
-        ).first()
+    async def create_round(self, *, game_id: uuid.UUID, index: int, hider_player_id: uuid.UUID, phase: models.RoundPhase) -> Optional[models.Round]:
+        row = (await self._conn.execute(sqlalchemy.text(CREATE_ROUND), {
+            "p1": game_id,
+            "p2": index,
+            "p3": hider_player_id,
+            "p4": phase,
+        })).first()
         if row is None:
             return None
         return models.Round(
@@ -68,7 +62,7 @@ class AsyncQuerier:
             created_at=row[7],
         )
 
-    async def get_round(self, *, game_id: uuid.UUID, index: int) -> models.Round | None:
+    async def get_round(self, *, game_id: uuid.UUID, index: int) -> Optional[models.Round]:
         row = (await self._conn.execute(sqlalchemy.text(GET_ROUND), {"p1": game_id, "p2": index})).first()
         if row is None:
             return None
@@ -101,6 +95,4 @@ class AsyncQuerier:
         await self._conn.execute(sqlalchemy.text(UPDATE_ROUND_PHASE), {"p1": id, "p2": phase})
 
     async def update_round_timer(self, *, id: uuid.UUID, hider_elapsed_seconds: float, is_paused: bool) -> None:
-        await self._conn.execute(
-            sqlalchemy.text(UPDATE_ROUND_TIMER), {"p1": id, "p2": hider_elapsed_seconds, "p3": is_paused}
-        )
+        await self._conn.execute(sqlalchemy.text(UPDATE_ROUND_TIMER), {"p1": id, "p2": hider_elapsed_seconds, "p3": is_paused})

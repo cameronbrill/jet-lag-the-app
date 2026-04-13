@@ -2,13 +2,14 @@
 # versions:
 #   sqlc v1.30.0
 # source: games.sql
-from collections.abc import AsyncIterator
+from typing import AsyncIterator, Optional
 import uuid
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 from jetlag.db.generated import models
+
 
 CREATE_GAME = """-- name: create_game \\:one
 INSERT INTO games (name, size)
@@ -36,7 +37,7 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_game(self, *, name: str, size: models.GameSize) -> models.Game | None:
+    async def create_game(self, *, name: str, size: models.GameSize) -> Optional[models.Game]:
         row = (await self._conn.execute(sqlalchemy.text(CREATE_GAME), {"p1": name, "p2": size})).first()
         if row is None:
             return None
@@ -49,7 +50,7 @@ class AsyncQuerier:
             created_at=row[5],
         )
 
-    async def get_game(self, *, id: uuid.UUID) -> models.Game | None:
+    async def get_game(self, *, id: uuid.UUID) -> Optional[models.Game]:
         row = (await self._conn.execute(sqlalchemy.text(GET_GAME), {"p1": id})).first()
         if row is None:
             return None

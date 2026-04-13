@@ -2,11 +2,13 @@
 # versions:
 #   sqlc v1.30.0
 # source: users.sql
+from typing import Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 from jetlag.db.generated import models
+
 
 CREATE_USER = """-- name: create_user \\:one
 INSERT INTO users (email, password_hash)
@@ -24,7 +26,7 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_user(self, *, email: str, password_hash: str) -> models.User | None:
+    async def create_user(self, *, email: str, password_hash: str) -> Optional[models.User]:
         row = (await self._conn.execute(sqlalchemy.text(CREATE_USER), {"p1": email, "p2": password_hash})).first()
         if row is None:
             return None
@@ -35,7 +37,7 @@ class AsyncQuerier:
             created_at=row[3],
         )
 
-    async def get_user_by_email(self, *, email: str) -> models.User | None:
+    async def get_user_by_email(self, *, email: str) -> Optional[models.User]:
         row = (await self._conn.execute(sqlalchemy.text(GET_USER_BY_EMAIL), {"p1": email})).first()
         if row is None:
             return None

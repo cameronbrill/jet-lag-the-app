@@ -13,6 +13,16 @@ async def test_shortlink_roundtrip(client: AsyncClient) -> None:
 
 
 @pytest.mark.asyncio()
+async def test_shortlink_upsert(client: AsyncClient) -> None:
+    first = await client.post("/api/shortlinks", json={"slug": "s1", "target_url": "https://old.example.com"})
+    assert first.status_code == 200
+    second = await client.post("/api/shortlinks", json={"slug": "s1", "target_url": "https://new.example.com"})
+    assert second.status_code == 200
+    resolve = await client.get("/api/shortlinks/s1")
+    assert resolve.json()["url"] == "https://new.example.com"
+
+
+@pytest.mark.asyncio()
 async def test_shortlink_html_escapes_url(client: AsyncClient) -> None:
     await client.post(
         "/api/shortlinks",

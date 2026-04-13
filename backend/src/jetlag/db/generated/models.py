@@ -3,9 +3,9 @@
 #   sqlc v1.30.0
 import datetime
 import enum
-import uuid
-
 import pydantic
+from typing import Optional
+import uuid
 
 
 class CurseBlockKind(enum.StrEnum):
@@ -38,7 +38,7 @@ class ActiveCurse(pydantic.BaseModel):
     curse_id: uuid.UUID
     target_player_id: uuid.UUID
     remaining_rounds: int
-    block_kind: CurseBlockKind | None
+    block_kind: Optional[CurseBlockKind]
     created_at: datetime.datetime
 
 
@@ -48,7 +48,7 @@ class CurseDefinition(pydantic.BaseModel):
     duration_rounds: int
     blocks_transit: bool
     blocks_questions: bool
-    video_instruction_url: str | None
+    video_instruction_url: Optional[str]
     created_at: datetime.datetime
 
 
@@ -65,7 +65,7 @@ class Player(pydantic.BaseModel):
     id: uuid.UUID
     game_id: uuid.UUID
     display_name: str
-    hide_order: int | None
+    hide_order: Optional[int]
     created_at: datetime.datetime
 
 

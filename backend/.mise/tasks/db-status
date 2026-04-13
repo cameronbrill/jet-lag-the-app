@@ -2,4 +2,4 @@
 #MISE description="Show Atlas migration status"
 set -euo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-atlas migrate status --url "${JETLAG_DATABASE_URL}" --env local
+atlas migrate status --url "${ATLAS_DATABASE_URL}" --env local

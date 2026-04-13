@@ -2,15 +2,18 @@
 # versions:
 #   sqlc v1.30.0
 # source: shortlinks.sql
+from typing import Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 from jetlag.db.generated import models
 
+
 CREATE_SHORTLINK = """-- name: create_shortlink \\:one
 INSERT INTO shortlinks (slug, target_url)
 VALUES (:p1, :p2)
+ON CONFLICT (slug) DO UPDATE SET target_url = EXCLUDED.target_url
 RETURNING slug, target_url, created_at
 """
 
@@ -24,7 +27,7 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_shortlink(self, *, slug: str, target_url: str) -> models.Shortlink | None:
+    async def create_shortlink(self, *, slug: str, target_url: str) -> Optional[models.Shortlink]:
         row = (await self._conn.execute(sqlalchemy.text(CREATE_SHORTLINK), {"p1": slug, "p2": target_url})).first()
         if row is None:
             return None
@@ -34,7 +37,7 @@ class AsyncQuerier:
             created_at=row[2],
         )
 
-    async def get_shortlink(self, *, slug: str) -> models.Shortlink | None:
+    async def get_shortlink(self, *, slug: str) -> Optional[models.Shortlink]:
         row = (await self._conn.execute(sqlalchemy.text(GET_SHORTLINK), {"p1": slug})).first()
         if row is None:
             return None

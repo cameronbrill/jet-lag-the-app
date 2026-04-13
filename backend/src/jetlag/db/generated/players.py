@@ -2,13 +2,14 @@
 # versions:
 #   sqlc v1.30.0
 # source: players.sql
-from collections.abc import AsyncIterator
+from typing import AsyncIterator, Optional
 import uuid
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 from jetlag.db.generated import models
+
 
 COUNT_PLAYERS_BY_GAME = """-- name: count_players_by_game \\:one
 SELECT count(*) FROM players WHERE game_id = :p1
@@ -31,20 +32,14 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def count_players_by_game(self, *, game_id: uuid.UUID) -> int | None:
+    async def count_players_by_game(self, *, game_id: uuid.UUID) -> Optional[int]:
         row = (await self._conn.execute(sqlalchemy.text(COUNT_PLAYERS_BY_GAME), {"p1": game_id})).first()
         if row is None:
             return None
         return row[0]
 
-    async def create_player(
-        self, *, game_id: uuid.UUID, display_name: str, hide_order: int | None
-    ) -> models.Player | None:
-        row = (
-            await self._conn.execute(
-                sqlalchemy.text(CREATE_PLAYER), {"p1": game_id, "p2": display_name, "p3": hide_order}
-            )
-        ).first()
+    async def create_player(self, *, game_id: uuid.UUID, display_name: str, hide_order: Optional[int]) -> Optional[models.Player]:
+        row = (await self._conn.execute(sqlalchemy.text(CREATE_PLAYER), {"p1": game_id, "p2": display_name, "p3": hide_order})).first()
         if row is None:
             return None
         return models.Player(
