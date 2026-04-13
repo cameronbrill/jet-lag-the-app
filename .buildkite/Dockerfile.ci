@@ -1,0 +1,18 @@
+FROM ubuntu:24.04
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl git ca-certificates build-essential unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -sSf https://mise.jdx.dev/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+WORKDIR /workdir
+COPY mise.toml mise.lock ./
+COPY backend/mise.toml backend/mise.toml
+COPY backend/mise.lock backend/mise.lock
+COPY client/mise.toml client/mise.toml
+COPY client/mise.lock client/mise.lock
+RUN mise install --yes
+
+COPY . .

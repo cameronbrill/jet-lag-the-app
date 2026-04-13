@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .buildkite/Dockerfile.ci
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    environment:
+      JETLAG_DATABASE_URL: "postgresql+asyncpg://jetlag:jetlag-dev@postgres:5432/jetlag_test"
+      JETLAG_TEST_DATABASE_URL: "postgresql+asyncpg://jetlag:jetlag-dev@postgres:5432/jetlag_test"
+      JETLAG_REDIS_URL: "redis://valkey:6379/0"
+      MISE_EXPERIMENTAL: "1"
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: jetlag_test
+      POSTGRES_USER: jetlag
+      POSTGRES_PASSWORD: jetlag-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jetlag"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  valkey:
+    image: valkey/valkey:9-alpine
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
