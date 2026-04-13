@@ -9,9 +9,9 @@ cd "$ROOT"
 
 case "${usage_target}" in
 	android)
-		exec mise x -- ./gradlew :app:androidApp:assembleRelease
+		exec mise x -- ./gradlew :app:androidApp:assembleRelease --no-daemon -Dorg.gradle.jvmargs="-Xmx2g"
 		;;
 	desktop)
-		exec mise x -- ./gradlew :app:desktopApp:packageDistributionForCurrentOS
+		exec mise x -- ./gradlew :app:desktopApp:packageDistributionForCurrentOS --no-daemon -Dorg.gradle.jvmargs="-Xmx2g"
 		;;
 esac
