@@ -3,11 +3,12 @@ from __future__ import annotations
 import html
 from urllib.parse import urlparse
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field, field_validator
+from sqlalchemy.exc import IntegrityError
 
-from jetlag.api.deps import DbConn
+from jetlag.api.deps import CurrentUserEmail, DbConn
 from jetlag.db.generated.shortlinks import AsyncQuerier as ShortlinkQuerier
 
 router = APIRouter(prefix="/shortlinks", tags=["shortlinks"])
@@ -40,8 +41,52 @@ class RegisterShortlinkBody(BaseModel):
 
 
 @router.post("")
-async def register_shortlink(conn: DbConn, body: RegisterShortlinkBody) -> dict[str, str]:
-    await ShortlinkQuerier(conn).create_shortlink(slug=body.slug, target_url=body.target_url)
+async def register_shortlink(
+    conn: DbConn,
+    body: RegisterShortlinkBody,
+    user_email: CurrentUserEmail,
+) -> dict[str, str]:
+    q = ShortlinkQuerier(conn)
+    existing = await q.get_shortlink(slug=body.slug)
+    if existing is not None:
+        if existing.created_by_email != user_email:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Slug already exists")
+        updated = await q.update_shortlink_target(
+            slug=body.slug,
+            target_url=body.target_url,
+            created_by_email=user_email,
+        )
+        if updated != 1:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Shortlink update failed",
+            )
+        return {"slug": body.slug}
+    try:
+        await q.insert_shortlink(slug=body.slug, target_url=body.target_url, created_by_email=user_email)
+    except IntegrityError:
+        await conn.rollback()
+        row = await q.get_shortlink(slug=body.slug)
+        if row is None:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Shortlink create failed",
+            ) from None
+        if row.created_by_email != user_email:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Slug already exists",
+            ) from None
+        updated = await q.update_shortlink_target(
+            slug=body.slug,
+            target_url=body.target_url,
+            created_by_email=user_email,
+        )
+        if updated != 1:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Shortlink update failed",
+            ) from None
     return {"slug": body.slug}
 
 

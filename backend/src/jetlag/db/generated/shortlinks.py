@@ -10,32 +10,28 @@ import sqlalchemy.ext.asyncio
 from jetlag.db.generated import models
 
 
-CREATE_SHORTLINK = """-- name: create_shortlink \\:one
-INSERT INTO shortlinks (slug, target_url)
-VALUES (:p1, :p2)
-ON CONFLICT (slug) DO UPDATE SET target_url = EXCLUDED.target_url
-RETURNING slug, target_url, created_at
+GET_SHORTLINK = """-- name: get_shortlink \\:one
+SELECT slug, target_url, created_by_email, created_at FROM shortlinks WHERE slug = :p1
 """
 
 
-GET_SHORTLINK = """-- name: get_shortlink \\:one
-SELECT slug, target_url, created_at FROM shortlinks WHERE slug = :p1
+INSERT_SHORTLINK = """-- name: insert_shortlink \\:one
+INSERT INTO shortlinks (slug, target_url, created_by_email)
+VALUES (:p1, :p2, :p3)
+RETURNING slug, target_url, created_by_email, created_at
+"""
+
+
+UPDATE_SHORTLINK_TARGET = """-- name: update_shortlink_target \\:execrows
+UPDATE shortlinks
+SET target_url = :p2
+WHERE slug = :p1 AND created_by_email = :p3
 """
 
 
 class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
-
-    async def create_shortlink(self, *, slug: str, target_url: str) -> Optional[models.Shortlink]:
-        row = (await self._conn.execute(sqlalchemy.text(CREATE_SHORTLINK), {"p1": slug, "p2": target_url})).first()
-        if row is None:
-            return None
-        return models.Shortlink(
-            slug=row[0],
-            target_url=row[1],
-            created_at=row[2],
-        )
 
     async def get_shortlink(self, *, slug: str) -> Optional[models.Shortlink]:
         row = (await self._conn.execute(sqlalchemy.text(GET_SHORTLINK), {"p1": slug})).first()
@@ -44,5 +40,21 @@ class AsyncQuerier:
         return models.Shortlink(
             slug=row[0],
             target_url=row[1],
-            created_at=row[2],
+            created_by_email=row[2],
+            created_at=row[3],
         )
+
+    async def insert_shortlink(self, *, slug: str, target_url: str, created_by_email: str) -> Optional[models.Shortlink]:
+        row = (await self._conn.execute(sqlalchemy.text(INSERT_SHORTLINK), {"p1": slug, "p2": target_url, "p3": created_by_email})).first()
+        if row is None:
+            return None
+        return models.Shortlink(
+            slug=row[0],
+            target_url=row[1],
+            created_by_email=row[2],
+            created_at=row[3],
+        )
+
+    async def update_shortlink_target(self, *, slug: str, target_url: str, created_by_email: str) -> int:
+        result = await self._conn.execute(sqlalchemy.text(UPDATE_SHORTLINK_TARGET), {"p1": slug, "p2": target_url, "p3": created_by_email})
+        return result.rowcount
