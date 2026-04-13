@@ -77,6 +77,7 @@ steps:
   - group: "Build"
     depends_on: "test"
     steps:
+      # Runs on the agent host (not inside the compose app container); avoids Docker-in-Docker.
       - label: "Build Backend Docker"
         command: "docker build -t jetlag-backend backend/"
 
