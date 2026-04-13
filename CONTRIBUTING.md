@@ -24,10 +24,10 @@ Follow conventional commits (`feat(client): …`). Each commit should be a coher
 ## Local checks
 
 - `mise run :format` — format all files (dprint).
-- `mise run :lint` — run all linters.
+- `mise run :lint` — Markdown only (`markdownlint`); use `mise run //backend:lint` and `mise run //client:lint` for code.
 - `mise run //backend:test` — backend tests (add `--ci` for CI mode, `--cov` for coverage).
 - `mise run //client:test` — client tests.
-- `mise run :check` — full monorepo gate (format check, hk, backend lint/typecheck/tests, client lint/tests).
+- `mise run :check` — full monorepo gate (format check, markdownlint, backend lint/typecheck/tests, client lint/tests).
 
 ## Schema changes
 

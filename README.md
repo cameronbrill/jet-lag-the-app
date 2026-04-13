@@ -7,7 +7,7 @@ Creator-focused companion for playing **Jet Lag: The Game** in real life — Kot
 - `backend/` — FastAPI + WebSocket game sync, pytest suites under `backend/tests/`.
 - `client/` — Gradle KMP workspace (`:core*`, `:feature-*`, `:app:*`).
 - `.toolchain/` — shared ruff/ty/detekt/ktlint baselines.
-- `.mise/tasks/` — repo-wide file tasks (`format`, `lint-hk`, `check`, …).
+- `.mise/tasks/` — repo-wide file tasks (`format`, `lint`, `check`, …).
 
 ## Prerequisites
 
@@ -29,15 +29,10 @@ Local development uses `docker-compose.yml` to run:
 
 ```bash
 mise install
-mise run //backend:deps
-docker compose up -d          # Postgres 18, Valkey 9
-mise run //backend:migrate    # apply database migrations
-mise run :dev                 # Tilt dev stack (backend + infra)
-
-cd client
-mise install                  # Java toolchain for this config root
-./gradlew :app:desktopApp:run
+mise run :dev
 ```
+
+That installs pinned tools and starts the Tilt stack (Postgres 18, Valkey 9, backend, and related local resources). Apply database migrations when the database is up (`mise run //backend:migrate`). Run the desktop client from `client/` with `./gradlew :app:desktopApp:run` after `mise install` in that directory if you need the JVM toolchain.
 
 Full quality gate:
 

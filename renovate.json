@@ -32,18 +32,19 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Docker image versions in docker-compose.yml",
-      "fileMatch": ["^docker-compose\\.yml$"],
-      "matchStrings": ["image:\\s*(?<depName>[^:]+):(?<currentValue>[\\w.-]+)"],
-      "datasourceTemplate": "docker"
+      "description": "First-party dprint WASM plugins",
+      "fileMatch": ["^dprint\\.json$"],
+      "matchStrings": ["https://plugins\\.dprint\\.dev/(?<depName>[\\w]+)-(?<currentValue>[\\d.]+)\\.wasm"],
+      "depNameTemplate": "dprint/dprint-plugin-{{{depName}}}",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
-      "description": "dprint WASM plugin versions",
+      "description": "g-plane dprint WASM plugins",
       "fileMatch": ["^dprint\\.json$"],
-      "matchStrings": ["https://plugins\\.dprint\\.dev/(?<depName>[\\w/-]+)-(?<currentValue>[\\d.]+)\\.wasm"],
-      "datasourceTemplate": "github-releases",
-      "registryUrlTemplate": "https://github.com/dprint/{{depName}}"
+      "matchStrings": ["https://plugins\\.dprint\\.dev/g-plane/(?<depName>[\\w_]+)-v(?<currentValue>[\\d.]+)\\.wasm"],
+      "registryUrlTemplate": "https://github.com/g-plane/{{{depName}}}",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",

@@ -2,6 +2,7 @@
 PYTHONPATH = "{{config_root}}/src"
 RUFF_CACHE_DIR = ".ruff_cache"
 TY_CONFIG_FILE = "{{config_root}}/../.toolchain/python/ty/base.toml"
+# Local-only defaults; production uses fnox / real secrets (never commit credentials).
 JETLAG_DATABASE_URL = "postgresql+asyncpg://jetlag:jetlag-dev@localhost:5432/jetlag"
 ATLAS_DATABASE_URL = "postgresql://jetlag:jetlag-dev@localhost:5432/jetlag"
 JETLAG_REDIS_URL = "redis://localhost:6379/0"
