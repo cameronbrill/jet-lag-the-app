@@ -1,3 +1,10 @@
+"""JWT-based signup and login.
+
+Signup enforces a minimum password length and a bcrypt-compatible UTF-8 byte cap (72 bytes).
+Login uses a separate request model with transport-only bounds so invalid credentials return
+401 instead of signup-style validation errors.
+"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
@@ -24,8 +31,16 @@ class PasswordExceedsBcryptLimitError(Exception):
     """Raised when a password's UTF-8 encoding exceeds bcrypt's 72-byte limit (internal / defense in depth)."""
 
 
+def _password_utf8_byte_length(password: str) -> int:
+    return len(password.encode("utf-8"))
+
+
+def _password_exceeds_bcrypt_limit(password: str) -> bool:
+    return _password_utf8_byte_length(password) > BCRYPT_PASSWORD_MAX_UTF8_BYTES
+
+
 def _hash_password(password: str) -> str:
-    if len(password.encode("utf-8")) > BCRYPT_PASSWORD_MAX_UTF8_BYTES:
+    if _password_exceeds_bcrypt_limit(password):
         raise PasswordExceedsBcryptLimitError
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
@@ -41,7 +56,7 @@ class SignupBody(BaseModel):
     @field_validator("password")
     @classmethod
     def password_fits_bcrypt(cls, value: str) -> str:
-        if len(value.encode("utf-8")) > BCRYPT_PASSWORD_MAX_UTF8_BYTES:
+        if _password_exceeds_bcrypt_limit(value):
             raise ValueError(PASSWORD_TOO_LONG_FOR_BCRYPT_MSG)
         return value
 
