@@ -26,7 +26,7 @@ async def test_shortlink_upsert(client: AsyncClient) -> None:
 async def test_shortlink_html_escapes_url(client: AsyncClient) -> None:
     await client.post(
         "/api/shortlinks",
-        json={"slug": "xss", "target_url": "\"><script>alert(1)</script>"},
+        json={"slug": "xss", "target_url": '"><script>alert(1)</script>'},
     )
     resp = await client.get("/api/shortlinks/xss/html")
     assert resp.status_code == 200

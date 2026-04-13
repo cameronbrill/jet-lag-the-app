@@ -11,4 +11,8 @@ case "${usage_target}" in
 	desktop)
 		exec mise x -- ./gradlew :app:desktopApp:run
 		;;
+	*)
+		echo "Unknown run target: ${usage_target:-}" >&2
+		exit 1
+		;;
 esac
