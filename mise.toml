@@ -17,7 +17,8 @@ MISE_LOG_LEVEL = "info"
 MISE_PIN = "1"
 PROJECT_NAME = "jet-lag"
 ENV = "development"
-_.fnox-env = { tools = true, profile = "dev" }
+# Align with ENV above so fnox loads the matching profile from fnox.toml.
+_.fnox-env = { tools = true, profile = "development" }
 
 [tools]
 # hk: `brew install hk` (no mise backend for macOS x86_64)

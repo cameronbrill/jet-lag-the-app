@@ -4,6 +4,8 @@
 
 [profiles.dev]
 
+[profiles.development]
+
 [profiles.staging]
 
 [profiles.production]

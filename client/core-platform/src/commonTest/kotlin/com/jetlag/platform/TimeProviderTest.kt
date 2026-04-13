@@ -9,7 +9,7 @@ class TimeProviderTest {
         val provider = TimeProvider()
         val millis = provider.nowMillis()
         assertTrue(millis > 0, "nowMillis should be positive")
-        // April 2025 epoch millis ≈ 1.74e12; sanity-check we're in the right ballpark
+        // April 2026 epoch millis ≈ 1.77e12; sanity-check we're in the right ballpark
         assertTrue(millis > 1_700_000_000_000L, "nowMillis should be after ~Nov 2023")
     }
 }
