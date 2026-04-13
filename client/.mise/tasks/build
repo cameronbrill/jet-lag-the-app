@@ -15,4 +15,8 @@ case "${usage_target}" in
 	desktop)
 		exec mise x -- ./gradlew :app:desktopApp:packageDistributionForCurrentOS
 		;;
+	*)
+		echo "Unknown build target: ${usage_target:-}" >&2
+		exit 1
+		;;
 esac

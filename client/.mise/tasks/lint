@@ -16,7 +16,10 @@ run_ktlint() {
 }
 
 run_detekt() {
-	mise x -- ./gradlew :feature-game:detekt
+	if [[ "${usage_fix:-false}" == "true" ]]; then
+		echo "warning: --fix applies to ktlint only; detekt does not support --fix here" >&2
+	fi
+	mise x -- ./gradlew detekt
 }
 
 if [[ "${usage_ktlint:-false}" == "true" ]]; then
