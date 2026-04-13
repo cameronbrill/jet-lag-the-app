@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
-#MISE description="Run Python tests"
+#MISE description="Run Python tests (--ci for JUnit XML, --cov for coverage)"
+#USAGE flag "--ci" help="Output JUnit XML to results/"
+#USAGE flag "--cov" help="Run with coverage report"
 set -euo pipefail
-uv run pytest
+
+ARGS=()
+
+if [[ "${usage_ci:-false}" == "true" ]]; then
+	mkdir -p results
+	ARGS+=(--junit-xml=results/pytest-junit.xml)
+fi
+
+if [[ "${usage_cov:-false}" == "true" ]]; then
+	ARGS+=(--cov=jetlag --cov-report=term-missing --cov-report=json:coverage.json)
+fi
+
+uv run pytest ${ARGS[@]+"${ARGS[@]}"}
