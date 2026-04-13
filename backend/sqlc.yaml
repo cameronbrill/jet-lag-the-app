@@ -12,7 +12,7 @@ sql:
       - out: src/jetlag/db/generated
         plugin: py
         options:
-          package: generated
+          package: jetlag.db.generated
           emit_sync_querier: false
           emit_async_querier: true
           emit_pydantic_models: true

@@ -24,7 +24,8 @@
     "**/.venv",
     "**/build",
     "**/.gradle",
-    "**/DerivedData"
+    "**/DerivedData",
+    "**/db/generated"
   ],
   "plugins": [
     "https://plugins.dprint.dev/json-0.20.0.wasm",

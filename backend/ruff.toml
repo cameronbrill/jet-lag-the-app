@@ -1,6 +1,7 @@
 extend = "../.toolchain/python/ruff/base.toml"
 
 src = ["src"]
+extend-exclude = ["src/jetlag/db/generated"]
 
 [lint]
 extend-select = []
