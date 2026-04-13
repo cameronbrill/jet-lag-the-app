@@ -15,6 +15,15 @@ router = APIRouter(prefix="/shortlinks", tags=["shortlinks"])
 _ALLOWED_SHORTLINK_SCHEMES = frozenset({"https", "myapp"})
 
 
+def safe_href_for_html(url: str) -> str:
+    """Escape URL for use in an HTML href; drop disallowed schemes (defense at render time)."""
+    parsed = urlparse(url)
+    scheme = (parsed.scheme or "").lower()
+    if scheme not in _ALLOWED_SHORTLINK_SCHEMES:
+        return "#"
+    return html.escape(url, quote=True)
+
+
 class RegisterShortlinkBody(BaseModel):
     slug: str = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_-]+$")
     target_url: str
@@ -49,7 +58,7 @@ async def resolve_shortlink_html(conn: DbConn, slug: str) -> HTMLResponse:
     result = await ShortlinkQuerier(conn).get_shortlink(slug=slug)
     if result is None:
         raise HTTPException(status_code=404, detail="Not found")
-    safe_url = html.escape(result.target_url, quote=True)
+    safe_url = safe_href_for_html(result.target_url)
     document = f"""<!doctype html>
 <html><head><meta charset="utf-8"><title>Open in app</title></head>
 <body><p><a href="{safe_url}">Continue</a></p></body></html>"""
