@@ -83,6 +83,7 @@ class Round(pydantic.BaseModel):
 class Shortlink(pydantic.BaseModel):
     slug: str
     target_url: str
+    created_by_email: str
     created_at: datetime.datetime
 
 
