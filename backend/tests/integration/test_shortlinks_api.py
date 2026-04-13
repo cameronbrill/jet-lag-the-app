@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from httpx import AsyncClient
 import pytest
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
+
+from jetlag.config import Settings
 
 
 async def _auth_headers(client: AsyncClient, email: str, password: str) -> dict[str, str]:
@@ -11,6 +15,23 @@ async def _auth_headers(client: AsyncClient, email: str, password: str) -> dict[
     assert t.status_code == 200, t.text
     token = t.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.mark.asyncio()
+async def test_shortlink_insert_401_when_user_deleted_stale_jwt(client: AsyncClient, settings: Settings) -> None:
+    email = "stale-jwt-shortlink@test.com"
+    headers = await _auth_headers(client, email, "password123")
+    engine = create_async_engine(settings.database_url, echo=False)
+    async with engine.begin() as conn:
+        await conn.execute(text("DELETE FROM users WHERE email = :e"), {"e": email})
+    await engine.dispose()
+    r = await client.post(
+        "/api/shortlinks",
+        json={"slug": "after-del", "target_url": "https://example.com/"},
+        headers=headers,
+    )
+    assert r.status_code == 401
+    assert r.json().get("detail") == "Invalid credentials"
 
 
 @pytest.mark.asyncio()

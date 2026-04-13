@@ -13,6 +13,26 @@ from jetlag.db.generated.shortlinks import AsyncQuerier as ShortlinkQuerier
 
 router = APIRouter(prefix="/shortlinks", tags=["shortlinks"])
 
+
+def _postgres_sqlstate(err: BaseException) -> str | None:
+    """Best-effort SQLSTATE from asyncpg/psycopg wrapped IntegrityError."""
+    cur: BaseException | None = err
+    visited: set[int] = set()
+    while cur is not None and id(cur) not in visited:
+        visited.add(id(cur))
+        st = getattr(cur, "sqlstate", None)
+        if isinstance(st, str) and len(st) == 5:
+            return st
+        pg = getattr(cur, "pgcode", None)
+        if isinstance(pg, str) and len(pg) == 5:
+            return pg
+        nxt = cur.__cause__
+        if nxt is None:
+            nxt = getattr(cur, "orig", None)
+        cur = nxt
+    return None
+
+
 _ALLOWED_SHORTLINK_SCHEMES = frozenset({"https", "myapp"})
 
 
@@ -64,9 +84,11 @@ async def register_shortlink(
         return {"slug": body.slug}
     try:
         await q.insert_shortlink(slug=body.slug, target_url=body.target_url, created_by_email=user_email)
-    except IntegrityError:
+    except IntegrityError as e:
         # Concurrent insert won the race; rollback and resolve by owner (same user → update; other → 409).
         await conn.rollback()
+        if _postgres_sqlstate(e) == "23503":
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials") from None
         row = await q.get_shortlink(slug=body.slug)
         if row is None:
             raise HTTPException(
