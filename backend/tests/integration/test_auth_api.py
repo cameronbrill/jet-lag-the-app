@@ -5,6 +5,12 @@ import pytest
 
 
 @pytest.mark.asyncio()
+async def test_login_empty_password_returns_422(client: AsyncClient) -> None:
+    resp = await client.post("/api/auth/login", json={"email": "any@example.com", "password": ""})
+    assert resp.status_code == 422
+
+
+@pytest.mark.asyncio()
 async def test_login_short_wrong_password_returns_401_not_422(client: AsyncClient) -> None:
     await client.post("/api/auth/signup", json={"email": "short-pwd-login@test.com", "password": "password123"})
     resp = await client.post(
