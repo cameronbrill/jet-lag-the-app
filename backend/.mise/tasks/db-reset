@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#MISE description="Reset local dev database (drop + recreate + migrate)"
+set -euo pipefail
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+
+DB_URL="${JETLAG_DATABASE_URL:-postgresql+asyncpg://jetlag:jetlag-dev@localhost:5432/jetlag}"
+PG_URL="postgresql://jetlag:jetlag-dev@localhost:5432"
+
+dropdb --if-exists -U jetlag -h localhost jetlag 2>/dev/null || true
+createdb -U jetlag -h localhost jetlag 2>/dev/null || true
+atlas migrate apply --url "${DB_URL}" --env local
+echo "Database reset and migrations applied."

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Regenerate sqlc query code from SQL"
+set -euo pipefail
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+sqlc generate
