@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
+import bcrypt
 from fastapi import APIRouter, HTTPException, status
 import jwt
 from pydantic import BaseModel, EmailStr
@@ -10,6 +11,14 @@ from jetlag.api.deps import DbConn, SettingsDep
 from jetlag.db.generated.users import AsyncQuerier as UserQuerier
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+def _hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+def _verify_password(password: str, password_hash: str) -> bool:
+    return bcrypt.checkpw(password.encode(), password_hash.encode())
 
 
 class SignupBody(BaseModel):
@@ -35,7 +44,7 @@ async def signup(conn: DbConn, settings: SettingsDep, body: SignupBody) -> Token
     existing = await UserQuerier(conn).get_user_by_email(email=body.email)
     if existing is not None:
         raise HTTPException(status_code=409, detail="User exists")
-    await UserQuerier(conn).create_user(email=body.email, password_hash=body.password)
+    await UserQuerier(conn).create_user(email=body.email, password_hash=_hash_password(body.password))
     token = _issue_token(settings, body.email)
     return TokenResponse(access_token=token)
 
@@ -43,7 +52,7 @@ async def signup(conn: DbConn, settings: SettingsDep, body: SignupBody) -> Token
 @router.post("/login")
 async def login(conn: DbConn, settings: SettingsDep, body: SignupBody) -> TokenResponse:
     user = await UserQuerier(conn).get_user_by_email(email=body.email)
-    if user is None or user.password_hash != body.password:
+    if user is None or not _verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = _issue_token(settings, body.email)
     return TokenResponse(access_token=token)
