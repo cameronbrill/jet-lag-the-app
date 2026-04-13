@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Run all quality checks across the monorepo"
+#MISE depends=[":format-ci", ":lint-hk", "//backend:lint", "//backend:typecheck", "//client:lint", "//backend:test", "//client:test"]
+set -euo pipefail
+echo "All checks passed."

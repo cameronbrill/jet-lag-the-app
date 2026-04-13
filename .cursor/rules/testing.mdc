@@ -1,0 +1,10 @@
+---
+description: Test-first workflow and where tests live
+alwaysApply: false
+---
+
+# Testing
+
+- Backend: `mise run //backend:test` (pytest + httpx async client). Tests live under `backend/tests/{unit,integration,ws}`.
+- Client: `mise run //client:test` (`./gradlew allTests`). Prefer `commonTest` per module; use **Turbine** for `Flow` assertions where helpful.
+- New behavior should be covered by tests in the same change; avoid pushing commits that leave CI red.

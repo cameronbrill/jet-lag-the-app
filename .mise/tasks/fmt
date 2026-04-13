@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Format all code"
+set -euo pipefail
+dprint fmt

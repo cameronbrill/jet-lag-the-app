@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Lint Python with ruff (apply safe fixes)"
+set -euo pipefail
+uv run ruff check --fix .

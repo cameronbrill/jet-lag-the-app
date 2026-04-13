@@ -1,0 +1,51 @@
+amends "package://github.com/jdx/hk/releases/download/v1.18.1/hk@1.18.1#/Config.pkl"
+
+local quality = new Mapping<String, Step> {
+  ["format"] {
+    glob = List("**/*.json", "**/*.md", "**/*.yaml", "**/*.yml", "**/*.toml", "**/*.py", "**/*.kt", "**/*.kts", "Dockerfile")
+    check = "mise run :format-ci"
+    fix = "mise run :fmt"
+  }
+    ["backend-lint"] {
+        glob = List("backend/**/*.py")
+        exclusive = true
+        check = "mise run //backend:lint"
+        fix = "mise run //backend:lint-fix"
+    }
+    ["backend-typecheck"] {
+        glob = List("backend/**/*.py")
+        exclusive = true
+        check = "mise run //backend:typecheck"
+    }
+    ["client-ktlint"] {
+        glob = List("client/**/*.kt", "client/**/*.kts")
+        exclusive = true
+        check = "mise run //client:lint-ktlint"
+        fix = "mise run //client:lint-ktlint-fix"
+    }
+    ["client-detekt"] {
+        glob = List("client/**/*.kt")
+        exclusive = true
+        check = "mise run //client:lint-detekt"
+    }
+  ["markdown"] {
+    glob = List("**/*.md")
+    check = "mise run :lint-markdown"
+    fix = "mise run :lint-markdown-fix"
+  }
+}
+
+hooks {
+  ["fix"] {
+    fix = true
+    steps = quality
+  }
+  ["check"] {
+    steps = quality
+  }
+  ["pre-commit"] {
+    fix = true
+    stash = "git"
+    steps = quality
+  }
+}

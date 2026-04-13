@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Run tests with JUnit XML output"
+set -euo pipefail
+mkdir -p results
+uv run pytest --junit-xml=results/pytest-junit.xml

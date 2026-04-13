@@ -1,0 +1,14 @@
+---
+description: Commit and PR title conventions
+alwaysApply: false
+---
+
+# Conventional commits
+
+Use `<type>(<scope>): <description>`.
+
+Types: `feat`, `fix`, `refactor`, `docs`, `style`, `perf`, `test`, `chore`.
+
+Scopes: `backend`, `client`, `game`, `creator`, `curses`, `auth`, `ci`, `deps`, `config`.
+
+One coherent change per commit; PRs should tell one reviewable story (Graphite stacks merge bottom-up).

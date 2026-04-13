@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Run KMP tests (all targets if Xcode is available, else desktop JVM only)"
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+if [[ "$(uname -s)" == Darwin ]] && xcrun xcodebuild -version >/dev/null 2>&1; then
+	exec mise x -- ./gradlew allTests
+else
+	exec mise x -- ./gradlew desktopTest
+fi

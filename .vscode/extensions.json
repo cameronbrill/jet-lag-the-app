@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "fwcd.kotlin",
+    "mathiasfrohlich.kotlin",
+    "esbenp.prettier-vscode",
+    "tamasfe.even-better-toml",
+    "redhat.vscode-yaml",
+    "ms-python.python",
+    "charliermarsh.ruff"
+  ]
+}

@@ -1,0 +1,8 @@
+[env]
+PYTHONPATH = "{{config_root}}/src"
+RUFF_CACHE_DIR = ".ruff_cache"
+TY_CONFIG_FILE = "{{config_root}}/../.toolchain/python/ty/base.toml"
+
+[tools]
+python = "3.14.4"
+uv = "latest"

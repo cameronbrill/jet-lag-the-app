@@ -1,0 +1,43 @@
+experimental_monorepo_root = true
+
+[settings]
+experimental = true
+auto_install = false
+lockfile = true
+
+[plugins]
+# Uncomment when using fnox + mise-env-fnox (requires `fnox` installable on your platform).
+# fnox-env = "https://github.com/jdx/mise-env-fnox"
+
+[monorepo]
+config_roots = ["backend", "client"]
+
+[env]
+MISE_EXPERIMENTAL = "1"
+MISE_LOG_LEVEL = "info"
+MISE_PIN = "1"
+PROJECT_NAME = "jet-lag"
+ENV = "development"
+# _.fnox-env = { tools = true, profile = "dev" }
+
+[tools]
+# hk: prebuilt releases omit macOS x86_64 — `brew install hk` or build from source.
+# fnox: `mise install fnox` uses GitHub releases; set GITHUB_TOKEN if you hit API rate limits.
+dprint = "0.50.2"
+"npm:markdownlint-cli" = "latest"
+"aqua:pinterest/ktlint" = "1.8.0"
+
+[task_templates."python:lint"]
+description = "Lint Python with ruff"
+run = "uv run ruff check ."
+tools = { python = "3.14.4", uv = "latest" }
+
+[task_templates."python:typecheck"]
+description = "Type check Python with ty"
+run = "uv run ty check"
+tools = { python = "3.14.4", uv = "latest" }
+
+[task_templates."python:test"]
+description = "Run Python tests"
+run = "uv run pytest"
+tools = { python = "3.14.4", uv = "latest" }

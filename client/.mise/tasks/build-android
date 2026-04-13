@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Build Android release APK"
+#MISE depends=["test"]
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+exec mise x -- ./gradlew :app:androidApp:assembleRelease

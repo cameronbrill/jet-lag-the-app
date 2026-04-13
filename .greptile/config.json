@@ -1,0 +1,11 @@
+{
+  "reviewOn": { "pullRequests": true },
+  "approvalRequired": false,
+  "fileIgnore": [
+    "**/build/**",
+    "**/.gradle/**",
+    "**/node_modules/**",
+    "*.lock",
+    "mise.lock"
+  ]
+}
