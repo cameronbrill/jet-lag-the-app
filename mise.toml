@@ -22,7 +22,7 @@ _.fnox-env = { tools = true, profile = "development" }
 
 [tools]
 # hk: `brew install hk` (no mise backend for macOS x86_64)
-# bk: `mise use github:buildkite/cli` (opt-in, hits GitHub rate limits without GITHUB_TOKEN)
+# bk: pinned below; GitHub API rate limits may apply without GITHUB_TOKEN
 node = "22"
 java = "21.0.2"
 fnox = "latest"
@@ -31,6 +31,7 @@ dprint = "0.50.2"
 "aqua:pinterest/ktlint" = "1.8.0"
 "aqua:ariga/atlas" = "latest"
 "aqua:sqlc-dev/sqlc" = "latest"
+"github:buildkite/cli" = "3.35.1"
 
 [task_templates."python:lint"]
 description = "Lint Python with ruff"
