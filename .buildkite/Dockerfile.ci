@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sSf https://mise.jdx.dev/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 ENV MISE_EXPERIMENTAL=1
-ENV MISE_LOCKED=1
-
 ARG MISE_GITHUB_TOKEN
 ENV MISE_GITHUB_TOKEN=${MISE_GITHUB_TOKEN}
 
