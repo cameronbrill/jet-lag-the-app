@@ -1,5 +1,6 @@
 steps:
   - group: "Quality"
+    key: "quality"
     steps:
       - label: "Format"
         command: "mise run :format -- --check"
@@ -37,7 +38,8 @@ steps:
               config: .buildkite/docker-compose.ci.yml
 
   - group: "Test"
-    depends_on: "Quality"
+    key: "test"
+    depends_on: "quality"
     steps:
       - label: "Test Backend"
         command: "mise run //backend:test -- --ci"
@@ -56,7 +58,7 @@ steps:
               config: .buildkite/docker-compose.ci.yml
 
   - group: "Build"
-    depends_on: "Test"
+    depends_on: "test"
     steps:
       - label: "Build Backend Docker"
         command: "docker build -t jetlag-backend backend/"
