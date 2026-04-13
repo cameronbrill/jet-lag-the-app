@@ -161,6 +161,10 @@ checksum = "sha256:6037b03651c67af5b00992cc73d0a4283b746effe7b5079ee3f1327cd72bc
 url = "https://github.com/jdx/fnox/releases/download/v1.20.0/fnox-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/388763121"
 
+[[tools.java]]
+version = "21.0.2"
+backend = "core:java"
+
 [[tools.node]]
 version = "22.22.2"
 backend = "core:node"
