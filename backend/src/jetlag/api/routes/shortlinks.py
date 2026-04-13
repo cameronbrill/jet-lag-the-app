@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import html
+
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -34,7 +36,8 @@ async def resolve_shortlink_html(conn: DbConn, slug: str) -> HTMLResponse:
     result = await ShortlinkQuerier(conn).get_shortlink(slug=slug)
     if result is None:
         raise HTTPException(status_code=404, detail="Not found")
-    html = f"""<!doctype html>
+    safe_url = html.escape(result.target_url, quote=True)
+    document = f"""<!doctype html>
 <html><head><meta charset="utf-8"><title>Open in app</title></head>
-<body><p><a href="{result.target_url}">Continue</a></p></body></html>"""
-    return HTMLResponse(content=html)
+<body><p><a href="{safe_url}">Continue</a></p></body></html>"""
+    return HTMLResponse(content=document)
