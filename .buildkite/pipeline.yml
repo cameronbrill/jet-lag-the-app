@@ -2,7 +2,7 @@ steps:
   - group: "Quality"
     steps:
       - label: "Format"
-        command: "mise run :format-ci"
+        command: "mise run :format -- --check"
 
       - label: "Lint Backend"
         command: "mise run //backend:lint"
@@ -13,14 +13,14 @@ steps:
       - label: "Typecheck Backend"
         command: "mise run //backend:typecheck"
 
-      - label: "hk Check"
-        command: "mise run :lint-hk"
+      - label: "Lint Markdown"
+        command: "mise run :lint"
 
   - group: "Test"
     depends_on: "Quality"
     steps:
       - label: "Test Backend"
-        command: "mise run //backend:test-ci"
+        command: "mise run //backend:test -- --ci"
         artifact_paths:
           - "backend/results/*.xml"
 
@@ -34,7 +34,7 @@ steps:
         command: "docker build -t jetlag-backend backend/"
 
       - label: "Build Android"
-        command: "mise run //client:build-android"
+        command: "mise run //client:build android"
 
       - label: "Build Desktop"
-        command: "mise run //client:build-desktop"
+        command: "mise run //client:build desktop"

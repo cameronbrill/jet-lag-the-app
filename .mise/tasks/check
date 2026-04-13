@@ -4,6 +4,7 @@ set -euo pipefail
 
 mise run :format -- --check
 mise run :lint
+hk check --all
 mise run //backend:lint
 mise run //backend:typecheck
 mise run //backend:test
