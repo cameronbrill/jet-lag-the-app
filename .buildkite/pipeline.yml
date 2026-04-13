@@ -8,13 +8,15 @@ steps:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
       - label: "Lint Backend"
-        command: "mise run //backend:lint"
+        command: "cd backend && mise x -- uv sync --all-groups && cd .. && mise run //backend:lint"
         plugins:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
       - label: "Lint Client"
         command: "mise run //client:lint"
@@ -22,13 +24,15 @@ steps:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
       - label: "Typecheck Backend"
-        command: "mise run //backend:typecheck"
+        command: "cd backend && mise x -- uv sync --all-groups && cd .. && mise run //backend:typecheck"
         plugins:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
       - label: "Lint Markdown"
         command: "mise run :lint"
@@ -36,19 +40,21 @@ steps:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
   - group: "Test"
     key: "test"
     depends_on: "quality"
     steps:
       - label: "Test Backend"
-        command: "mise run //backend:test -- --ci"
+        command: "cd backend && mise x -- uv sync --all-groups && cd .. && mise run //backend:test -- --ci"
         artifact_paths:
           - "backend/results/*.xml"
         plugins:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
       - label: "Test Client"
         command: "mise run //client:test"
@@ -56,6 +62,7 @@ steps:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
   - group: "Build"
     depends_on: "test"
@@ -69,6 +76,7 @@ steps:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
 
       - label: "Build Desktop"
         command: "mise run //client:build desktop"
@@ -76,3 +84,4 @@ steps:
           - docker-compose#v5.8.0:
               run: app
               config: .buildkite/docker-compose.ci.yml
+              mount-checkout: true
