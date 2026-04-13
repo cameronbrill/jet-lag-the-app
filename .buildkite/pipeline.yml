@@ -1,3 +1,6 @@
+secrets:
+  - GITHUB_TOKEN
+
 steps:
   - group: "Quality"
     key: "quality"
@@ -9,6 +12,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
       - label: "Lint Backend"
         command: "cd backend && mise x -- uv sync --all-groups && cd .. && mise run //backend:lint"
@@ -17,6 +21,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
       - label: "Lint Client"
         command: "mise run //client:lint"
@@ -25,6 +30,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
       - label: "Typecheck Backend"
         command: "cd backend && mise x -- uv sync --all-groups && cd .. && mise run //backend:typecheck"
@@ -33,6 +39,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
       - label: "Lint Markdown"
         command: "mise run :lint"
@@ -41,6 +48,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
   - group: "Test"
     key: "test"
@@ -55,6 +63,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
       - label: "Test Client"
         command: "mise run //client:test"
@@ -63,6 +72,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
   - group: "Build"
     depends_on: "test"
@@ -77,6 +87,7 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true
 
       - label: "Build Desktop"
         command: "mise run //client:build desktop"
@@ -85,3 +96,4 @@ steps:
               run: app
               config: .buildkite/docker-compose.ci.yml
               mount-checkout: true
+              propagate-environment: true

@@ -12,6 +12,7 @@ services:
         condition: service_healthy
     environment:
       MISE_GITHUB_TOKEN: ${GITHUB_TOKEN}
+      ANDROID_HOME: /opt/android-sdk
       JETLAG_DATABASE_URL: "postgresql+asyncpg://jetlag:jetlag-dev@postgres:5432/jetlag_test"
       JETLAG_TEST_DATABASE_URL: "postgresql+asyncpg://jetlag:jetlag-dev@postgres:5432/jetlag_test"
       JETLAG_REDIS_URL: "redis://valkey:6379/0"
