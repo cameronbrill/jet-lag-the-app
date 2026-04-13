@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Resolve Gradle dependencies"
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+exec mise x -- ./gradlew dependencies

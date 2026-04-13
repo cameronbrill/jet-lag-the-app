@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Run all Kotlin linters"
+#MISE depends=["lint-ktlint", "lint-detekt"]
+set -euo pipefail
+echo "Kotlin linting complete."

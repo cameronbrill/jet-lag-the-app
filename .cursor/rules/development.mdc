@@ -1,0 +1,11 @@
+---
+description: Core development workflow for jet-lag-the-app
+alwaysApply: true
+---
+
+# Development
+
+- Prefer `mise run` tasks over raw `pytest`, `uv`, or `./gradlew` from muscle memory; tasks are the single source of truth with CI.
+- The client requires **JDK 17+** (see `client/mise.toml`); the backend targets Python **3.13+** in-repo (`requires-python`) with tooling aligned via `mise` and `uv`.
+- Formatting is **dprint** (`mise run :fmt`). Kotlin formatting is invoked via **ktlint** through dprint’s exec plugin; Python uses `backend/scripts/dprint-python-wrapper.sh` (ssort + ruff format).
+- Do not add `.env` files or commit plaintext secrets — **fnox** only.

@@ -1,0 +1,12 @@
+---
+description: Module boundaries and platform constraints
+alwaysApply: false
+---
+
+# Architecture
+
+- Client `feature-*` modules must not depend on each other; compose them only from `app/shared`.
+- `core`, `core-network`, `core-database`, `core-ui`, and `core-platform` are shared building blocks.
+- Backend exposes HTTP under `/api/...` and WebSocket `/ws/game` for game sync.
+- WebSocket payloads should use kotlinx.serialization-friendly DTOs on the client; keep server validation authoritative.
+- `expect/actual` in `core-platform` must provide Android, iOS, and desktop actuals when adding new declarations.

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Start the backend server"
+#MISE depends=["deps"]
+set -euo pipefail
+uv run python -m jetlag.main

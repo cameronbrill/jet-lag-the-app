@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": true,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+  "python.analysis.extraPaths": ["${workspaceFolder}/backend/src"],
+  "kotlin.languageServer.enabled": true,
+  "[kotlin]": {
+    "editor.defaultFormatter": "fwcd.kotlin"
+  }
+}

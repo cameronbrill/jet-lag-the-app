@@ -1,0 +1,46 @@
+# Local env files (project uses fnox; these must never be relied on)
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.json
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Kotlin / Gradle
+**/.gradle/
+**/build/
+**/out/
+*.iml
+.idea/
+.kotlin/
+
+# Xcode / iOS
+**/DerivedData/
+*.xcuserstate
+
+# OS / editor
+.DS_Store
+*.swp
+*~
+
+# Logs / results
+*.log
+backend/results/
+
+# dprint / tooling caches (keep lockfiles)
+node_modules/
+
+# Encrypted fnox key material must not be committed accidentally
+*.age.key
+age.key

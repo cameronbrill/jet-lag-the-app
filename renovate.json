@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Group pytest ecosystem",
+      "matchPackageNames": ["pytest*", "httpx"],
+      "groupName": "pytest"
+    },
+    {
+      "description": "Kotlin / Gradle",
+      "matchManagers": ["gradle"],
+      "groupName": "gradle"
+    },
+    {
+      "description": "dprint CLI",
+      "matchPackageNames": ["dprint"],
+      "groupName": "dprint"
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,16 @@
+extend = "../.toolchain/python/ruff/base.toml"
+
+src = ["src"]
+
+[lint]
+extend-select = []
+extend-ignore = [
+  "TC001",
+  "TC002",
+  "TC003",
+  "S105",
+  "S106",
+]
+
+[lint.isort]
+known-first-party = ["jetlag"]
