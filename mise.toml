@@ -23,6 +23,7 @@ _.fnox-env = { tools = true, profile = "dev" }
 # hk: `brew install hk` (no mise backend for macOS x86_64)
 # bk: `mise use github:buildkite/cli` (opt-in, hits GitHub rate limits without GITHUB_TOKEN)
 node = "22"
+java = "21.0.2"
 fnox = "latest"
 dprint = "0.50.2"
 "npm:markdownlint-cli" = "latest"
