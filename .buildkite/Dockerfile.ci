@@ -21,6 +21,9 @@ RUN mise install --yes
 RUN cd backend && mise install --yes
 RUN cd client && mise install --yes
 
+ENV JAVA_HOME=/root/.local/share/mise/installs/java/21.0.2
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
 ENV ANDROID_HOME=/opt/android-sdk
 RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
     curl -sSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
