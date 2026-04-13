@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import Depends, Request
+from sqlalchemy.ext.asyncio import AsyncConnection
 
 from jetlag.config import Settings, get_settings
 from jetlag.core.connection_manager import ConnectionManager
@@ -13,14 +15,20 @@ from jetlag.core.game_engine import GameRuntime
 
 @dataclass
 class MemoryStore:
+    """In-memory store retained for game engine runtime state (not persisted yet)."""
+
     games: dict[UUID, GameRuntime] = field(default_factory=dict)
-    curses: dict[UUID, dict] = field(default_factory=dict)
-    shortlinks: dict[str, str] = field(default_factory=dict)
-    users: dict[str, str] = field(default_factory=dict)
 
 
 def get_store(request: Request) -> MemoryStore:
     return request.app.state.store
+
+
+async def get_connection(request: Request) -> AsyncIterator[AsyncConnection]:
+    engine = request.app.state.engine
+    async with engine.connect() as conn:
+        yield conn
+        await conn.commit()
 
 
 def get_connections(request: Request) -> ConnectionManager:
@@ -37,3 +45,4 @@ def resolve_settings(request: Request) -> Settings:
 StoreDep = Annotated[MemoryStore, Depends(get_store)]
 ConnDep = Annotated[ConnectionManager, Depends(get_connections)]
 SettingsDep = Annotated[Settings, Depends(resolve_settings)]
+DbConn = Annotated[AsyncConnection, Depends(get_connection)]

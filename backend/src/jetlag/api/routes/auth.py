@@ -6,7 +6,8 @@ from fastapi import APIRouter, HTTPException, status
 import jwt
 from pydantic import BaseModel, EmailStr
 
-from jetlag.api.deps import SettingsDep, StoreDep
+from jetlag.api.deps import DbConn, SettingsDep
+from jetlag.db.generated.users import AsyncQuerier as UserQuerier
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -30,18 +31,19 @@ def _issue_token(settings: SettingsDep, subject: str) -> str:
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
-async def signup(store: StoreDep, settings: SettingsDep, body: SignupBody) -> TokenResponse:
-    if body.email in store.users:
+async def signup(conn: DbConn, settings: SettingsDep, body: SignupBody) -> TokenResponse:
+    existing = await UserQuerier(conn).get_user_by_email(email=body.email)
+    if existing is not None:
         raise HTTPException(status_code=409, detail="User exists")
-    store.users[body.email] = body.password
+    await UserQuerier(conn).create_user(email=body.email, password_hash=body.password)
     token = _issue_token(settings, body.email)
     return TokenResponse(access_token=token)
 
 
 @router.post("/login")
-async def login(store: StoreDep, settings: SettingsDep, body: SignupBody) -> TokenResponse:
-    pw = store.users.get(body.email)
-    if pw is None or pw != body.password:
+async def login(conn: DbConn, settings: SettingsDep, body: SignupBody) -> TokenResponse:
+    user = await UserQuerier(conn).get_user_by_email(email=body.email)
+    if user is None or user.password_hash != body.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = _issue_token(settings, body.email)
     return TokenResponse(access_token=token)

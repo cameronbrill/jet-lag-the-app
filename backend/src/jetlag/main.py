@@ -10,19 +10,23 @@ from jetlag.api.routes import auth, curses, games, leaderboard, shortlinks
 from jetlag.api.ws import game_sync
 from jetlag.config import Settings, get_settings
 from jetlag.core.connection_manager import ConnectionManager
+from jetlag.db.engine import create_db_engine
 from jetlag.logging import configure_logging
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     configure_logging()
+    engine = app.state.engine
     yield
+    await engine.dispose()
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or get_settings()
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
     app.state.settings = settings
+    app.state.engine = create_db_engine(settings)
     app.state.store = MemoryStore()
     app.state.connections = ConnectionManager()
 
