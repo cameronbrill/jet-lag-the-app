@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description="Start full dev stack (Tilt + docker-compose)"
+set -euo pipefail
+exec tilt up

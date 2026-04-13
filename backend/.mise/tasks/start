@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Start the backend server"
+#MISE description="Start the backend dev server"
 #MISE depends=["deps"]
 set -euo pipefail
-uv run python -m jetlag.main
+uv run uvicorn jetlag.main:app --reload --host 0.0.0.0 --port 8000

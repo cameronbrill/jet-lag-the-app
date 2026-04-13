@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Apply pending Atlas migrations"
+set -euo pipefail
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+atlas migrate apply --url "${JETLAG_DATABASE_URL}" --env local
