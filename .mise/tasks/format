@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Format all code (or check with --check)"
+#USAGE flag "--check" help="Check formatting without writing (CI mode)"
+set -euo pipefail
+
+if [[ "${usage_check:-false}" == "true" ]]; then
+	dprint check
+else
+	dprint fmt
+fi

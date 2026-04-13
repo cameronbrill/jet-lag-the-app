@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Lint Markdown (or fix with --fix)"
+#USAGE flag "--fix" help="Auto-fix lint issues"
+set -euo pipefail
+
+if [[ "${usage_fix:-false}" == "true" ]]; then
+	markdownlint --fix .
+else
+	markdownlint .
+fi
