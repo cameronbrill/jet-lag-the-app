@@ -25,6 +25,8 @@ fnox = "latest"
 dprint = "0.50.2"
 "npm:markdownlint-cli" = "latest"
 "aqua:pinterest/ktlint" = "1.8.0"
+"aqua:ariga/atlas" = "latest"
+"aqua:sqlc-dev/sqlc" = "latest"
 
 [task_templates."python:lint"]
 description = "Lint Python with ruff"
