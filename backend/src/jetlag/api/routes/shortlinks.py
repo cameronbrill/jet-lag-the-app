@@ -4,7 +4,8 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
-from jetlag.api.deps import StoreDep
+from jetlag.api.deps import DbConn
+from jetlag.db.generated.shortlinks import AsyncQuerier as ShortlinkQuerier
 
 router = APIRouter(prefix="/shortlinks", tags=["shortlinks"])
 
@@ -15,25 +16,25 @@ class RegisterShortlinkBody(BaseModel):
 
 
 @router.post("")
-async def register_shortlink(store: StoreDep, body: RegisterShortlinkBody) -> dict[str, str]:
-    store.shortlinks[body.slug] = body.target_url
+async def register_shortlink(conn: DbConn, body: RegisterShortlinkBody) -> dict[str, str]:
+    await ShortlinkQuerier(conn).create_shortlink(slug=body.slug, target_url=body.target_url)
     return {"slug": body.slug}
 
 
 @router.get("/{slug}")
-async def resolve_shortlink(store: StoreDep, slug: str) -> dict[str, str]:
-    url = store.shortlinks.get(slug)
-    if url is None:
+async def resolve_shortlink(conn: DbConn, slug: str) -> dict[str, str]:
+    result = await ShortlinkQuerier(conn).get_shortlink(slug=slug)
+    if result is None:
         raise HTTPException(status_code=404, detail="Not found")
-    return {"url": url}
+    return {"url": result.target_url}
 
 
 @router.get("/{slug}/html", response_class=HTMLResponse)
-async def resolve_shortlink_html(store: StoreDep, slug: str) -> HTMLResponse:
-    url = store.shortlinks.get(slug)
-    if url is None:
+async def resolve_shortlink_html(conn: DbConn, slug: str) -> HTMLResponse:
+    result = await ShortlinkQuerier(conn).get_shortlink(slug=slug)
+    if result is None:
         raise HTTPException(status_code=404, detail="Not found")
     html = f"""<!doctype html>
 <html><head><meta charset="utf-8"><title>Open in app</title></head>
-<body><p><a href="{url}">Continue</a></p></body></html>"""
+<body><p><a href="{result.target_url}">Continue</a></p></body></html>"""
     return HTMLResponse(content=html)
