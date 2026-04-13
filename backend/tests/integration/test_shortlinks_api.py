@@ -24,11 +24,21 @@ async def test_shortlink_upsert(client: AsyncClient) -> None:
 
 @pytest.mark.asyncio()
 async def test_shortlink_html_escapes_url(client: AsyncClient) -> None:
+    # Ampersands in query must be escaped in HTML attributes
     await client.post(
         "/api/shortlinks",
-        json={"slug": "xss", "target_url": '"><script>alert(1)</script>'},
+        json={"slug": "xss", "target_url": "https://example.com/?x=1&y=2&z=3"},
     )
     resp = await client.get("/api/shortlinks/xss/html")
     assert resp.status_code == 200
-    assert "<script>" not in resp.text
-    assert "&lt;script&gt;" in resp.text or "&#x27;" in resp.text or "&quot;" in resp.text
+    assert "&amp;" in resp.text
+    assert "javascript:" not in resp.text
+
+
+@pytest.mark.asyncio()
+async def test_shortlink_rejects_javascript_scheme(client: AsyncClient) -> None:
+    resp = await client.post(
+        "/api/shortlinks",
+        json={"slug": "js1", "target_url": "javascript:alert(1)"},
+    )
+    assert resp.status_code == 422
