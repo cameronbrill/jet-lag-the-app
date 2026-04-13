@@ -5,6 +5,7 @@ alwaysApply: false
 
 # Testing
 
-- Backend: `mise run //backend:test` (pytest + httpx async client). Tests live under `backend/tests/{unit,integration,ws}`.
+- Backend: `mise run //backend:test` (pytest + httpx async client). Tests live under `backend/tests/{unit,integration,ws}`. Pass `--ci` for CI mode or `--cov` for coverage.
+- Tests run against a real **Postgres** instance (not SQLite). Set `JETLAG_TEST_DATABASE_URL` to override the default test database connection.
 - Client: `mise run //client:test` (`./gradlew allTests`). Prefer `commonTest` per module; use **Turbine** for `Flow` assertions where helpful.
 - New behavior should be covered by tests in the same change; avoid pushing commits that leave CI red.
