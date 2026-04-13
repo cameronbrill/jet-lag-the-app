@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Run tests with coverage"
-set -euo pipefail
-uv run pytest --cov=jetlag --cov-report=term-missing --cov-report=json:coverage.json

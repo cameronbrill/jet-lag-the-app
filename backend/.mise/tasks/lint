@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
-#MISE description="Lint Python with ruff"
+#MISE description="Lint Python with ruff (or fix with --fix)"
+#USAGE flag "--fix" help="Apply safe auto-fixes"
 set -euo pipefail
-uv run ruff check .
+
+if [[ "${usage_fix:-false}" == "true" ]]; then
+	uv run ruff check --fix .
+else
+	uv run ruff check .
+fi
