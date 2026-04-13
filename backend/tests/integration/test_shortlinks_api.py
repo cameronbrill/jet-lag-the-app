@@ -10,3 +10,15 @@ async def test_shortlink_roundtrip(client: AsyncClient) -> None:
     assert r.status_code == 200
     g = await client.get("/api/shortlinks/c1")
     assert g.json()["url"] == "myapp://curse/1"
+
+
+@pytest.mark.asyncio()
+async def test_shortlink_html_escapes_url(client: AsyncClient) -> None:
+    await client.post(
+        "/api/shortlinks",
+        json={"slug": "xss", "target_url": "\"><script>alert(1)</script>"},
+    )
+    resp = await client.get("/api/shortlinks/xss/html")
+    assert resp.status_code == 200
+    assert "<script>" not in resp.text
+    assert "&lt;script&gt;" in resp.text or "&#x27;" in resp.text or "&quot;" in resp.text
