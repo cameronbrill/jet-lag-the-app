@@ -17,6 +17,41 @@
       "description": "dprint CLI",
       "matchPackageNames": ["dprint"],
       "groupName": "dprint"
+    },
+    {
+      "description": "Infrastructure images",
+      "matchPackageNames": ["postgres", "valkey/valkey"],
+      "groupName": "infra"
+    },
+    {
+      "description": "CI tooling",
+      "matchManagers": ["mise"],
+      "groupName": "ci-tooling"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Docker image versions in docker-compose.yml",
+      "fileMatch": ["^docker-compose\\.yml$"],
+      "matchStrings": ["image:\\s*(?<depName>[^:]+):(?<currentValue>[\\w.-]+)"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "dprint WASM plugin versions",
+      "fileMatch": ["^dprint\\.json$"],
+      "matchStrings": ["https://plugins\\.dprint\\.dev/(?<depName>[\\w/-]+)-(?<currentValue>[\\d.]+)\\.wasm"],
+      "datasourceTemplate": "github-releases",
+      "registryUrlTemplate": "https://github.com/dprint/{{depName}}"
+    },
+    {
+      "customType": "regex",
+      "description": "sqlc WASM plugin version in sqlc.yaml",
+      "fileMatch": ["^backend/sqlc\\.yaml$"],
+      "matchStrings": ["https://downloads\\.sqlc\\.dev/plugin/sqlc-gen-python_(?<currentValue>[\\d.]+)\\.wasm"],
+      "depNameTemplate": "sqlc-dev/sqlc-gen-python",
+      "datasourceTemplate": "github-releases"
     }
   ],
   "lockFileMaintenance": {
