@@ -42,3 +42,21 @@ async def test_shortlink_rejects_javascript_scheme(client: AsyncClient) -> None:
         json={"slug": "js1", "target_url": "javascript:alert(1)"},
     )
     assert resp.status_code == 422
+
+
+@pytest.mark.asyncio()
+async def test_shortlink_rejects_invalid_slug_characters(client: AsyncClient) -> None:
+    resp = await client.post(
+        "/api/shortlinks",
+        json={"slug": "bad/slug", "target_url": "https://example.com/"},
+    )
+    assert resp.status_code == 422
+
+
+@pytest.mark.asyncio()
+async def test_shortlink_rejects_slug_over_max_length(client: AsyncClient) -> None:
+    resp = await client.post(
+        "/api/shortlinks",
+        json={"slug": "a" * 129, "target_url": "https://example.com/"},
+    )
+    assert resp.status_code == 422
