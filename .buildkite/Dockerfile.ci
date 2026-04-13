@@ -1,7 +1,7 @@
 FROM ubuntu:24.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl git ca-certificates build-essential unzip && \
+    curl git ca-certificates build-essential unzip wget && \
     rm -rf /var/lib/apt/lists/*
 
 RUN curl -sSf https://mise.jdx.dev/install.sh | sh
@@ -20,3 +20,14 @@ COPY client/mise.lock client/mise.lock
 RUN mise install --yes
 RUN cd backend && mise install --yes
 RUN cd client && mise install --yes
+
+ENV ANDROID_HOME=/opt/android-sdk
+RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
+    curl -sSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
+      -o /tmp/cmdline-tools.zip && \
+    unzip -q /tmp/cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools && \
+    mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest && \
+    rm /tmp/cmdline-tools.zip
+ENV PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${PATH}"
+RUN yes | sdkmanager --licenses && \
+    sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
