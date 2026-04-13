@@ -3,35 +3,30 @@ amends "package://github.com/jdx/hk/releases/download/v1.18.1/hk@1.18.1#/Config.
 local quality = new Mapping<String, Step> {
   ["format"] {
     glob = List("**/*.json", "**/*.md", "**/*.yaml", "**/*.yml", "**/*.toml", "**/*.py", "**/*.kt", "**/*.kts", "Dockerfile")
-    check = "mise run :format-ci"
-    fix = "mise run :fmt"
+    check = "mise run :format -- --check"
+    fix = "mise run :format"
   }
-    ["backend-lint"] {
-        glob = List("backend/**/*.py")
-        exclusive = true
-        check = "mise run //backend:lint"
-        fix = "mise run //backend:lint-fix"
-    }
-    ["backend-typecheck"] {
-        glob = List("backend/**/*.py")
-        exclusive = true
-        check = "mise run //backend:typecheck"
-    }
-    ["client-ktlint"] {
-        glob = List("client/**/*.kt", "client/**/*.kts")
-        exclusive = true
-        check = "mise run //client:lint-ktlint"
-        fix = "mise run //client:lint-ktlint-fix"
-    }
-    ["client-detekt"] {
-        glob = List("client/**/*.kt")
-        exclusive = true
-        check = "mise run //client:lint-detekt"
-    }
+  ["backend-lint"] {
+    glob = List("backend/**/*.py")
+    exclusive = true
+    check = "mise run //backend:lint"
+    fix = "mise run //backend:lint -- --fix"
+  }
+  ["backend-typecheck"] {
+    glob = List("backend/**/*.py")
+    exclusive = true
+    check = "mise run //backend:typecheck"
+  }
+  ["client-lint"] {
+    glob = List("client/**/*.kt", "client/**/*.kts")
+    exclusive = true
+    check = "mise run //client:lint"
+    fix = "mise run //client:lint -- --fix"
+  }
   ["markdown"] {
     glob = List("**/*.md")
-    check = "mise run :lint-markdown"
-    fix = "mise run :lint-markdown-fix"
+    check = "mise run :lint"
+    fix = "mise run :lint -- --fix"
   }
 }
 
