@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -22,4 +23,9 @@ compose.desktop {
     application {
         mainClass = "com.jetlag.desktop.MainKt"
     }
+}
+
+// JDK 21 defaults `compileJava` to release 21; Kotlin stays on JVM 17 above — Gradle rejects the mix.
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(17)
 }
