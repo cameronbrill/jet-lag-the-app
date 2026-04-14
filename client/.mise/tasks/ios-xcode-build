@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#MISE description="Build JetLagIOS via xcodebuild (iOS Simulator, no Xcode GUI)"
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "${ROOT}"
+
+if [[ "$(uname -s)" != Darwin ]]; then
+	echo "ios-xcode-build requires macOS." >&2
+	exit 1
+fi
+
+if ! xcrun xcodebuild -version >/dev/null 2>&1; then
+	echo "xcodebuild not found; install Xcode and Command Line Tools." >&2
+	exit 1
+fi
+
+export PATH="${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}"
+
+# Pick a concrete simulator (generic destinations are brittle for Kotlin/Compose embed).
+pick_sim_udid() {
+	python3 - <<'PY'
+import json, subprocess, sys
+
+try:
+    out = subprocess.check_output(
+        ["xcrun", "simctl", "list", "devices", "available", "-j"],
+        text=True,
+    )
+except (subprocess.CalledProcessError, FileNotFoundError):
+    sys.exit(1)
+
+data = json.loads(out)
+for runtime, devices in data.get("devices", {}).items():
+    if "iOS" not in runtime and "xrOS" not in runtime:
+        continue
+    for d in devices:
+        if not d.get("isAvailable", True):
+            continue
+        name = d.get("name", "")
+        if "iPhone" in name and d.get("udid"):
+            print(d["udid"])
+            raise SystemExit(0)
+raise SystemExit(1)
+PY
+}
+
+SIM_UDID="$(pick_sim_udid || true)"
+if [[ -z "${SIM_UDID}" ]]; then
+	echo "error: no available iPhone simulator found (install Xcode simulators or create one in Xcode)." >&2
+	exit 1
+fi
+
+HOST_ARCH="$(uname -m)"
+case "${HOST_ARCH}" in
+	arm64)
+		SIM_ARCH_ARGS=(ARCHS=arm64 ONLY_ACTIVE_ARCH=YES)
+		;;
+	x86_64)
+		SIM_ARCH_ARGS=(ARCHS=x86_64 ONLY_ACTIVE_ARCH=YES)
+		;;
+	*)
+		echo "error: unsupported host architecture for ios-xcode-build: ${HOST_ARCH}" >&2
+		exit 1
+		;;
+esac
+
+exec mise x -- xcodebuild \
+	-project "app/iosApp/JetLagIOS.xcodeproj" \
+	-scheme JetLagIOS \
+	-configuration Debug \
+	-destination "platform=iOS Simulator,id=${SIM_UDID}" \
+	"${SIM_ARCH_ARGS[@]}" \
+	build

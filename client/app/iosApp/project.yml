@@ -29,5 +29,11 @@ targets:
     preBuildScripts:
       - path: scripts/embed_kotlin_framework.sh
         name: Embed Kotlin Framework (Gradle)
-        shell: /bin/sh
+        shell: /bin/bash
         basedOnDependencyAnalysis: false
+
+schemes:
+  JetLagIOS:
+    build:
+      targets:
+        JetLagIOS: all

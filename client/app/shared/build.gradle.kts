@@ -27,6 +27,7 @@ kotlin {
 
     iosArm64()
     iosSimulatorArm64()
+    iosX64()
 
     targets.withType<KotlinNativeTarget>().configureEach {
         binaries.framework {
@@ -56,6 +57,9 @@ kotlin {
             implementation(compose.ui)
         }
         iosSimulatorArm64Test.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        iosX64Test.dependencies {
             implementation(libs.kotlin.test)
         }
     }
