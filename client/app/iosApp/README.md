@@ -37,6 +37,10 @@ The Xcode target **JetLagIOS** runs a **Run Script** phase (content synced from 
 - Kotlin: [`../shared/src/iosMain/kotlin/com/jetlag/app/Main.kt`](../shared/src/iosMain/kotlin/com/jetlag/app/Main.kt) exports **`mainViewController()`** for the **`Shared`** framework.
 - Swift: [`Sources/JetLagIOSApp.swift`](Sources/JetLagIOSApp.swift) calls **`MainKt.mainViewController()`**.
 
+## Troubleshooting
+
+- **`No such module 'Shared'`** — Xcode must find the framework under **`app/shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)`** (e.g. `Debug/iphonesimulator`). [`project.yml`](project.yml) **`FRAMEWORK_SEARCH_PATHS`** must use that **`$(CONFIGURATION)/$(SDK_NAME)`** segment, **not** `$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)` (wrong folder shape). After changing **`project.yml`**, run **`xcodegen generate`** again, then **Product → Clean Build Folder** in Xcode.
+
 ## Tests / CI
 
 - **`mise run //client:test`** on macOS with Xcode runs **`linkDebugFrameworkIosSimulatorArm64`** (framework link smoke) then **`allTests`** (includes **`iosSimulatorArm64Test`** under `:app:shared`).
