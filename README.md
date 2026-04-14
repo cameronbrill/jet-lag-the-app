@@ -32,7 +32,11 @@ mise install
 mise run :dev
 ```
 
-That installs pinned tools and starts the Tilt stack (Postgres 18, Valkey 9, backend, and related local resources). Apply database migrations when the database is up (`mise run //backend:migrate`). Run the desktop client from `client/` with `./gradlew :app:desktopApp:run` after `mise install` in that directory if you need the JVM toolchain.
+That installs pinned tools and starts the Tilt stack (Postgres 18, Valkey 9, backend, and related local resources). Apply database migrations when the database is up (`mise run //backend:migrate`). Run the desktop client from `client/` with `./gradlew :app:desktopApp:run` (or `mise run //client:run desktop`) after `mise install` in that directory if you need the JVM toolchain. The `:app:desktopApp` module is JVM-only (Compose Desktop); its Kotlin sources live under `src/main/kotlin`, unlike KMP library modules that use `commonMain` / `jvmMain`.
+
+### iOS placeholder (macOS + Xcode)
+
+The Xcode host app lives under **`client/app/iosApp`**, generated with **XcodeGen** from **`project.yml`**. After `mise install` in **`client/`** (pins **XcodeGen** in `client/mise.toml`), run `mise x -- xcodegen generate` from `client/app/iosApp`, then open **`JetLagIOS.xcodeproj`**, set signing, and run on a simulator or device. Details: [`client/app/iosApp/README.md`](client/app/iosApp/README.md).
 
 Full quality gate:
 

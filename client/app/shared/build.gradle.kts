@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.androidLibrary)
@@ -26,6 +27,14 @@ kotlin {
 
     iosArm64()
     iosSimulatorArm64()
+    iosX64()
+
+    targets.withType<KotlinNativeTarget>().configureEach {
+        binaries.framework {
+            baseName = "Shared"
+            isStatic = true
+        }
+    }
 
     jvm("desktop") {
         compilerOptions {
@@ -43,6 +52,15 @@ kotlin {
             api(compose.foundation)
             api(compose.material3)
             implementation(libs.koin.core)
+        }
+        iosMain.dependencies {
+            implementation(compose.ui)
+        }
+        iosSimulatorArm64Test.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        iosX64Test.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }

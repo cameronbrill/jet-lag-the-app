@@ -1,0 +1,315 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D3C59A1BC1BDC923AFC5C67E /* JetLagIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855DC57CFC7A0262A7E41C41 /* JetLagIOSApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		855DC57CFC7A0262A7E41C41 /* JetLagIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JetLagIOSApp.swift; sourceTree = "<group>"; };
+		ACE086D520CEA9A958C8A988 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C6A9834759EFC4F93D26590F /* JetLagIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = JetLagIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		677E825F74A653AFD7F74116 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C6A9834759EFC4F93D26590F /* JetLagIOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7E3786ED0C1B6430F7B36AB0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				ACE086D520CEA9A958C8A988 /* Info.plist */,
+				855DC57CFC7A0262A7E41C41 /* JetLagIOSApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		DCA7E7718359B58C7B0F8C32 = {
+			isa = PBXGroup;
+			children = (
+				7E3786ED0C1B6430F7B36AB0 /* Sources */,
+				677E825F74A653AFD7F74116 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0CBCEE526EE4DC40FB86D181 /* JetLagIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D6EE8F94284885B1313A4B4 /* Build configuration list for PBXNativeTarget "JetLagIOS" */;
+			buildPhases = (
+				46AF1CB2365FBCF7AB263052 /* Embed Kotlin Framework (Gradle) */,
+				4DE74455CE6E36A15AD31C24 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JetLagIOS;
+			packageProductDependencies = (
+			);
+			productName = JetLagIOS;
+			productReference = C6A9834759EFC4F93D26590F /* JetLagIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A8738DB20CAD5DFC9912E669 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 738E31AC9CC378BC5758D12F /* Build configuration list for PBXProject "JetLagIOS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DCA7E7718359B58C7B0F8C32;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 677E825F74A653AFD7F74116 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0CBCEE526EE4DC40FB86D181 /* JetLagIOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		46AF1CB2365FBCF7AB263052 /* Embed Kotlin Framework (Gradle) */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Kotlin Framework (Gradle)";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/usr/bin/env bash\n# Invoked from Xcode (Run Script). SRCROOT is the iosApp directory (sibling of this scripts/ folder's parent).\nset -euo pipefail\n\nexport PATH=\"${HOME}/.local/bin:/opt/homebrew/bin:/usr/local/bin:${PATH}\"\n\nif [[ -z \"${SRCROOT:-}\" ]]; then\n\techo \"error: SRCROOT is unset; this script must run from an Xcode build.\" >&2\n\texit 1\nfi\n\nCLIENT_ROOT=\"$(cd \"${SRCROOT}/../..\" && pwd)\"\ncd \"${CLIENT_ROOT}\"\n\n# Compose's syncComposeResourcesForIos reads PLATFORM_NAME and ARCHS from the environment.\n# Some xcodebuild / Run Script contexts omit them → Gradle \"provider has no value\" / missing architectures.\nif [[ -z \"${PLATFORM_NAME:-}\" ]]; then\n\tcase \"${SDK_NAME:-}\" in\n\t\tiphonesimulator | *simulator)\n\t\t\texport PLATFORM_NAME=iphonesimulator\n\t\t\t;;\n\t\tiphoneos)\n\t\t\texport PLATFORM_NAME=iphoneos\n\t\t\t;;\n\tesac\nfi\n# When Xcode omits ARCHS, default to the host CPU for simulator (Intel x86_64 vs Apple arm64).\nif [[ -z \"${ARCHS:-}\" || \"${ARCHS:-}\" == *undefined_arch* ]]; then\n\tcase \"${PLATFORM_NAME:-}\" in\n\t\tiphonesimulator)\n\t\t\texport ARCHS=\"$(uname -m)\"\n\t\t\t;;\n\t\t*)\n\t\t\texport ARCHS=arm64\n\t\t\t;;\n\tesac\nfi\n\n# Configuration cache can reuse a graph configured without Xcode env (e.g. after a desktop CLI run),\n# which breaks Compose's syncComposeResourcesForIos (lazy providers stay unset at execution).\nif command -v mise >/dev/null 2>&1; then\n\texec mise x -- ./gradlew --no-configuration-cache :app:shared:embedAndSignAppleFrameworkForXcode\nfi\n\nif [[ -n \"${JAVA_HOME:-}\" && -x \"${JAVA_HOME}/bin/java\" ]]; then\n\texec ./gradlew --no-configuration-cache :app:shared:embedAndSignAppleFrameworkForXcode\nfi\n\nif command -v java >/dev/null 2>&1; then\n\texec ./gradlew --no-configuration-cache :app:shared:embedAndSignAppleFrameworkForXcode\nfi\n\necho \"error: could not run Gradle embed: mise and Java not found (PATH is often minimal when Xcode is launched from the Dock).\" >&2\necho \"hint: add ~/.local/bin and Homebrew to PATH, run 'mise activate', or open Xcode from a Terminal where mise works.\" >&2\nexit 1\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4DE74455CE6E36A15AD31C24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3C59A1BC1BDC923AFC5C67E /* JetLagIOSApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6175ADBE700DAA293698515D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jetlag.app.ios.dev;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		715236DDF4ACD0F1CD23B7FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)\"";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "$(inherited) -framework Shared";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B5CAAC46443D5BC8AE44FC20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jetlag.app.ios.dev;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE3DCDAC4749807BBAEA6C08 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)\"";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "$(inherited) -framework Shared";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6D6EE8F94284885B1313A4B4 /* Build configuration list for PBXNativeTarget "JetLagIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5CAAC46443D5BC8AE44FC20 /* Debug */,
+				6175ADBE700DAA293698515D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		738E31AC9CC378BC5758D12F /* Build configuration list for PBXProject "JetLagIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE3DCDAC4749807BBAEA6C08 /* Debug */,
+				715236DDF4ACD0F1CD23B7FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A8738DB20CAD5DFC9912E669 /* Project object */;
+}

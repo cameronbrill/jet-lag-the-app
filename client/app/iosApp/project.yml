@@ -1,0 +1,39 @@
+name: JetLagIOS
+options:
+  bundleIdPrefix: com.jetlag
+  deploymentTarget:
+    iOS: "15.0"
+  developmentLanguage: en
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    FRAMEWORK_SEARCH_PATHS: $(inherited) "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+    OTHER_LDFLAGS: $(inherited) -framework Shared
+    LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks
+
+targets:
+  JetLagIOS:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jetlag.app.ios.dev
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: Sources/Info.plist
+    preBuildScripts:
+      - path: scripts/embed_kotlin_framework.sh
+        name: Embed Kotlin Framework (Gradle)
+        shell: /bin/bash
+        basedOnDependencyAnalysis: false
+
+schemes:
+  JetLagIOS:
+    build:
+      targets:
+        JetLagIOS: all
