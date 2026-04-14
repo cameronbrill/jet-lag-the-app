@@ -8,6 +8,8 @@ cd "$ROOT"
 if [[ "${usage_all:-false}" == "true" ]]; then
 	exec mise x -- ./gradlew allTests
 elif [[ "$(uname -s)" == Darwin ]] && xcrun xcodebuild -version >/dev/null 2>&1; then
+	# Link smoke: ensures :app:shared iOS framework still compiles for simulator (see iosApp plan).
+	mise x -- ./gradlew :app:shared:linkDebugFrameworkIosSimulatorArm64
 	exec mise x -- ./gradlew allTests
 else
 	exec mise x -- ./gradlew desktopTest
